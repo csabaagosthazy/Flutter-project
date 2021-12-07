@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '/tshirt_connection.dart';
 import '/tshirt_data.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,15 +36,41 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+/// This is the stateless widget that the main application instantiates.
+class _InfoCard extends StatelessWidget {
+  const _InfoCard({Key? key, required this.title, required this.icon});
 
+   final String title;
+   final Icon icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        child: InkWell(
+          splashColor: Colors.blue.withAlpha(30),
+          onTap: () {
+            print('Card tapped.');
+          },
+          child: Column(
+                children: [
+                  icon,
+                  Center(child: Text(title),)
+          ]),
+        ),
+      ),
+    );
+  }
+}
 class _HomePageState extends State<HomePage> {
   //Variable that get all the data from the t-shirt
   String _data = "";
+  String textConnectedTshirt = "No t-shirt connected!";
 
-  var time;
-  var heartFrequency;
-  var temperature;
-  var humidity;
+  var time="";
+  var heartFrequency="";
+  var temperature="";
+  var humidity="";
   // init connection class
   TshirtConnection conn =
       TshirtConnection(url: 'https://tshirtserver.herokuapp.com/');
@@ -51,7 +80,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    var data = "No t-shirt connected!";
+    var data = null;
     //We increment a timer every 2 secondes the get the data and we put the get data methode inside the timer
     Timer mytimer = Timer.periodic(Duration(seconds: 2), (timer) {
       //Methode that will connect the application with the web server in this ip (192.168.4.2) and get the data
@@ -60,7 +89,16 @@ class _HomePageState extends State<HomePage> {
       res.then((value) => data = value.toString());
 
       setState(() {
-        _data = data;
+        if(data != null) {
+          _data = data;
+          List<String> t = _data.split(" ");
+          time = t[0];
+          textConnectedTshirt = "T-shirt connected! ("+time+")";
+          heartFrequency = t[1];
+          temperature = t[2];
+          humidity = t[3];
+        }
+
       });
     });
   }
@@ -82,19 +120,30 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You can see de t-shirt data in real time',
-            ),
-            Text(
-              _data,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+        child:
+            Column(children: <Widget>[
+              Center(child: Text(textConnectedTshirt)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Expanded(
+                  flex: 3,
+                    child: _InfoCard(title: heartFrequency, icon: Icon(MdiIcons.heart,color: Colors.red, size: 75))
+                ),
+                Expanded(
+                    flex: 3,
+                    child:_InfoCard(title: temperature, icon: Icon(MdiIcons.thermometer,color: Colors.orange, size: 75))
+                ),
+                Expanded(
+                    flex: 3,
+                    child:_InfoCard(title: temperature, icon: Icon(MdiIcons.waterPercent,color: Colors.blue, size:75))
+                ),
+
+              ],
+            )
+            ],)
         ),
-      ),
+
     );
   }
 }
