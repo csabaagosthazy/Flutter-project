@@ -28,9 +28,10 @@ app.get("/", (req, res) => {
   diff = Math.floor(diff / 60);
   const hours = diff;
 
-  const uptime = `${hours}:${minutes}:${seconds}`
+  const uptime = `${hours}:${minutes}:${seconds}`;
 
   const responseString = `${uptime} ${heartbeat_rate} ${temperature} ${humidity}`;
+  res.header("Content-Type", "text/plain");
   res.send(responseString);
 });
 
