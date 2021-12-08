@@ -15,14 +15,22 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", (req, res) => {
-  const date = new Date();
-  const diff = Math.round((date - startTime) / 1000);
-  if (diff > 2000) startTime = new Date();
-  const freq = randomNumber(40, 50);
-  const temp = randomNumber(25, 32);
-  const hum = randomNumber(20, 35);
-  const time = diff + ":01:01";
-  const responseString = `${time} ${freq} ${temp} ${hum}`;
+  const current_date = new Date();
+
+  const heartbeat_rate = randomNumber(40, 50);
+  const temperature = randomNumber(25, 32);
+  const humidity = randomNumber(20, 35);
+
+  let diff = Math.round((current_date - startTime) / 1000);
+  const seconds = diff % 60;
+  diff = Math.floor(diff / 60);
+  const minutes = diff % 60;
+  diff = Math.floor(diff / 60);
+  const hours = diff;
+
+  const uptime = `${hours}:${minutes}:${seconds}`
+
+  const responseString = `${uptime} ${heartbeat_rate} ${temperature} ${humidity}`;
   res.send(responseString);
 });
 
