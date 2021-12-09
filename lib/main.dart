@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '/tshirt_connection.dart';
@@ -35,6 +37,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // List of variables
+  List<String> history = [];
+
   //Variable that get all the data from the t-shirt
   String _data = "";
 
@@ -45,6 +50,13 @@ class _HomePageState extends State<HomePage> {
   // init connection class
   TshirtConnection conn =
       TshirtConnection(url: 'https://tshirtserver.herokuapp.com/');
+
+  // add values in history
+  void addInHistory(String text) {
+    setState(() {
+      history.add(text);
+    });
+  }
 
   //InitState methode that launch the code when the application in starting
   @override
@@ -61,6 +73,7 @@ class _HomePageState extends State<HomePage> {
 
       setState(() {
         _data = data;
+        addInHistory(_data);
       });
     });
   }
@@ -85,16 +98,34 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You can see de t-shirt data in real time',
-            ),
-            Text(
-              _data,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+            Text('You can see de t-shirt data in real time',),
+            Text(_data,style: Theme.of(context).textTheme.headline4,),
+            Expanded(child: HistoryList(history))],
         ),
       ),
     );
   }
 }
+
+class HistoryList extends StatefulWidget {
+  final List<String> historyItems;
+
+  HistoryList(this.historyItems);
+
+  @override
+  _HistoryListState createState() => _HistoryListState();
+}
+
+class _HistoryListState extends State<HistoryList> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: widget.historyItems.length,
+      itemBuilder: (context, index) {
+        var item = widget.historyItems[index];
+        return Card(child: Row(children: <Widget>[Expanded(child: ListTile(title: Text(item)))]));
+      },
+    );
+  }
+}
+
