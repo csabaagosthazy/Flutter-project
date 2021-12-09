@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
           List<String> values = _data.split(" ");
           history.add(TshirtData(time: values[0], heartFrequency: values[1], temperature: values[2], humidity: values[3]));
 
-          textConnectedTshirt = "T-shirt connected! ("+allData.last.time+")";
+          textConnectedTshirt = "T-shirt connected! ("+history.last.time+")";
 
         }
 
@@ -129,39 +129,37 @@ class _HomePageState extends State<HomePage> {
         child:
             Column(children: <Widget>[
               Center(child: Text(textConnectedTshirt)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Expanded(
-                  flex: 3,
-                    child: _InfoCard(title: const allData.last.heartFrequency, icon: const Icon(MdiIcons.heart,color: Colors.red, size: 75))
-                ),
-                Expanded(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Expanded(
                     flex: 3,
-                    child:_InfoCard(title: allData.last.temperature, icon: Icon(MdiIcons.thermometer,color: Colors.orange, size: 75))
-                ),
-                Expanded(
-                    flex: 3,
-                    child:_InfoCard(title: allData.last.humidity, icon: Icon(MdiIcons.waterPercent,color: Colors.blue, size:75))
-                ),
+                      child: _InfoCard(title: history.last.heartFrequency, icon: const Icon(MdiIcons.heart,color: Colors.red, size: 75))
+                  ),
+                  Expanded(
+                      flex: 3,
+                      child:_InfoCard(title: history.last.temperature, icon: Icon(MdiIcons.thermometer,color: Colors.orange, size: 75))
+                  ),
+                  Expanded(
+                      flex: 3,
+                      child:_InfoCard(title: history.last.humidity, icon: Icon(MdiIcons.waterPercent,color: Colors.blue, size:75))
+                  ),
 
-              ],
-            )
-            ],),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('You can see de t-shirt data in real time',),
-            Text(_data,style: Theme.of(context).textTheme.headline4,),
-            Expanded(child: HistoryList(history))],
-        ),
+                ],
+              ),
+
+                  Text('You can see de t-shirt data in real time',),
+                  Text(_data,style: Theme.of(context).textTheme.headline4,),
+                  Expanded(child: HistoryList(history)),
+      ]))
 
     );
+
   }
 }
 
 class HistoryList extends StatefulWidget {
-  final List<String> historyItems;
+  final List<TshirtData> historyItems;
 
   HistoryList(this.historyItems);
 
@@ -176,7 +174,7 @@ class _HistoryListState extends State<HistoryList> {
       itemCount: widget.historyItems.length,
       itemBuilder: (context, index) {
         var item = widget.historyItems[index];
-        return Card(child: Row(children: <Widget>[Expanded(child: ListTile(title: Text(item)))]));
+        return Card(child: Row(children: <Widget>[Expanded(child: ListTile(title: Text(item.time + " " + item.heartFrequency + " " + item.temperature + " " + item.humidity)))]));
       },
     );
   }
