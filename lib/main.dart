@@ -1,12 +1,18 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_group2_tshirt_project/tshirt_data.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '/tshirt_connection.dart';
-import '/tshirt_data.dart';
 
 
 void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+
   WidgetsFlutterBinding.ensureInitialized();
   //await Firebase.initializeApp();
   runApp(const MyApp());
@@ -38,7 +44,7 @@ class HomePage extends StatefulWidget {
 }
 /// This is the stateless widget that the main application instantiates.
 class _InfoCard extends StatelessWidget {
-  const _InfoCard({Key? key, required this.title, required this.icon});
+  const _InfoCard({required this.title, required this.icon});
 
    final String title;
    final Icon icon;
@@ -62,16 +68,14 @@ class _InfoCard extends StatelessWidget {
     );
   }
 }
+
 class _HomePageState extends State<HomePage> {
   //Variable that get all the data from the t-shirt
   String _data = "";
   String textConnectedTshirt = "No t-shirt connected!";
 
-  var time="";
-  var heartFrequency="";
-  var temperature="";
-  var humidity="";
-  // init connection class
+
+  List<TshirtData> allData = List.empty(growable: true);
   TshirtConnection conn =
       TshirtConnection(url: 'https://tshirtserver.herokuapp.com/');
 
@@ -80,23 +84,23 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    var data = null;
+    String data = "";
     //We increment a timer every 2 secondes the get the data and we put the get data methode inside the timer
-    Timer mytimer = Timer.periodic(Duration(seconds: 2), (timer) {
+    Timer.periodic(const Duration(seconds: 2), (timer) {
       //Methode that will connect the application with the web server in this ip (192.168.4.2) and get the data
       Future<dynamic> res = conn.getData();
       //res.then((value) => {value.map((e) => data + " " + e)});
       res.then((value) => data = value.toString());
 
       setState(() {
-        if(data != null) {
+        if(data.isNotEmpty) {
           _data = data;
-          List<String> t = _data.split(" ");
-          time = t[0];
-          textConnectedTshirt = "T-shirt connected! ("+time+")";
-          heartFrequency = t[1];
-          temperature = t[2];
-          humidity = t[3];
+          data = "";
+          List<String> values = _data.split(" ");
+          allData.add(TshirtData(time: values[0], heartFrequency: values[1], temperature: values[2], humidity: values[3]));
+
+          textConnectedTshirt = "T-shirt connected! ("+allData.last.time+")";
+
         }
 
       });
@@ -128,15 +132,15 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 Expanded(
                   flex: 3,
-                    child: _InfoCard(title: heartFrequency, icon: Icon(MdiIcons.heart,color: Colors.red, size: 75))
+                    child: _InfoCard(title: const allData.last.heartFrequency, icon: const Icon(MdiIcons.heart,color: Colors.red, size: 75))
                 ),
                 Expanded(
                     flex: 3,
-                    child:_InfoCard(title: temperature, icon: Icon(MdiIcons.thermometer,color: Colors.orange, size: 75))
+                    child:_InfoCard(title: allData.last.temperature, icon: Icon(MdiIcons.thermometer,color: Colors.orange, size: 75))
                 ),
                 Expanded(
                     flex: 3,
-                    child:_InfoCard(title: temperature, icon: Icon(MdiIcons.waterPercent,color: Colors.blue, size:75))
+                    child:_InfoCard(title: allData.last.humidity, icon: Icon(MdiIcons.waterPercent,color: Colors.blue, size:75))
                 ),
 
               ],

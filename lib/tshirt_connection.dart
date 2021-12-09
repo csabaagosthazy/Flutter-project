@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import '/tshirt_data.dart';
 
 class TshirtConnection {
-  var url;
+  String url;
+
 
   //Constructor
   TshirtConnection({required this.url});
