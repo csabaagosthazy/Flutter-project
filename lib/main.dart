@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -74,8 +76,8 @@ class _HomePageState extends State<HomePage> {
   String _data = "";
   String textConnectedTshirt = "No t-shirt connected!";
 
-
-  List<TshirtData> allData = List.empty(growable: true);
+  // List of variables
+  List<TshirtData> history = List.empty(growable: true);
   TshirtConnection conn =
       TshirtConnection(url: 'https://tshirtserver.herokuapp.com/');
 
@@ -97,7 +99,7 @@ class _HomePageState extends State<HomePage> {
           _data = data;
           data = "";
           List<String> values = _data.split(" ");
-          allData.add(TshirtData(time: values[0], heartFrequency: values[1], temperature: values[2], humidity: values[3]));
+          history.add(TshirtData(time: values[0], heartFrequency: values[1], temperature: values[2], humidity: values[3]));
 
           textConnectedTshirt = "T-shirt connected! ("+allData.last.time+")";
 
@@ -145,9 +147,38 @@ class _HomePageState extends State<HomePage> {
 
               ],
             )
-            ],)
+            ],),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('You can see de t-shirt data in real time',),
+            Text(_data,style: Theme.of(context).textTheme.headline4,),
+            Expanded(child: HistoryList(history))],
         ),
 
     );
   }
 }
+
+class HistoryList extends StatefulWidget {
+  final List<String> historyItems;
+
+  HistoryList(this.historyItems);
+
+  @override
+  _HistoryListState createState() => _HistoryListState();
+}
+
+class _HistoryListState extends State<HistoryList> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: widget.historyItems.length,
+      itemBuilder: (context, index) {
+        var item = widget.historyItems[index];
+        return Card(child: Row(children: <Widget>[Expanded(child: ListTile(title: Text(item)))]));
+      },
+    );
+  }
+}
+
