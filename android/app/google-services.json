@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1074031614350",
+    "project_id": "flutter-t-shirt-645-2",
+    "storage_bucket": "flutter-t-shirt-645-2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074031614350:android:695f910aa12e19c0f4ecdf",
+        "android_client_info": {
+          "package_name": "ch.hevs.flutter_group2_tshirt_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1074031614350-usc8od2sni2ks2gder2egi5vkdspfdja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7POFhgk8gUvIkiNNrjZIjMAg-xEtJvpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1074031614350-usc8od2sni2ks2gder2egi5vkdspfdja.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1074031614350-dgtffl8sakqpc1iu97t6vb7v2sbuj2e8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.flutter.flutter.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
