@@ -1,12 +1,19 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_group2_tshirt_project/tshirt_data.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '/tshirt_connection.dart';
 import '/tshirt_data.dart';
 import '/db_service.dart';
 import 'dart:developer';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MyApp());
+
   WidgetsFlutterBinding.ensureInitialized();
   //await Firebase.initializeApp();
   runApp(const MyApp());
@@ -37,16 +44,42 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+/// This is the stateless widget that the main application instantiates.
+class _InfoCard extends StatelessWidget {
+  const _InfoCard({required this.title, required this.icon});
+
+  final String title;
+  final Icon icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        child: InkWell(
+          splashColor: Colors.blue.withAlpha(30),
+          onTap: () {
+            print('Card tapped.');
+          },
+          child: Column(children: [
+            icon,
+            Center(
+              child: Text(title),
+            )
+          ]),
+        ),
+      ),
+    );
+  }
+}
+
 class _HomePageState extends State<HomePage> {
   //Variable that get all the data from the t-shirt
   String _data = "";
   String _test = "";
+  String textConnectedTshirt = "No t-shirt connected!";
 
-  var time;
-  var heartFrequency;
-  var temperature;
-  var humidity;
-  // init connection class
+  // List of variables
+  List<TshirtData> history = List.empty(growable: true);
   TshirtConnection conn =
       TshirtConnection(url: 'https://tshirtserver.herokuapp.com/');
 
@@ -55,7 +88,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    var data = "No t-shirt connected!";
 
     //-------------------------------------------db test start
     List<TshirtData> test = [
@@ -84,14 +116,21 @@ class _HomePageState extends State<HomePage> {
     });
     //-------------------------------------------------db test end
     //We increment a timer every 2 secondes the get the data and we put the get data methode inside the timer
-    Timer mytimer = Timer.periodic(Duration(seconds: 2), (timer) {
+    Timer.periodic(const Duration(seconds: 2), (timer) async {
       //Methode that will connect the application with the web server in this ip (192.168.4.2) and get the data
       Future<dynamic> res = conn.getData();
       //res.then((value) => {value.map((e) => data + " " + e)});
-      res.then((value) => data = value.toString());
+      var data = await res.then((value) => value);
 
       setState(() {
-        _data = data;
+        if (data.toString().isNotEmpty) {
+          _data = data.toString();
+          log(data.toString());
+          history.add(data);
+
+          textConnectedTshirt =
+              "T-shirt connected! (" + history.last.time + ")";
+        }
       });
     });
   }
@@ -105,31 +144,80 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You can see the t-shirt data in real time',
-            ),
-            Text(
-              _data,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            Text(
-              _test,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(widget.title),
         ),
-      ),
+        body: Center(
+            // Center is a layout widget. It takes a single child and positions it
+            // in the middle of the parent.
+            child: Column(children: <Widget>[
+          Center(child: Text(textConnectedTshirt)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                  flex: 3,
+                  child: _InfoCard(
+                      title: history.last.heartFrequency,
+                      icon: const Icon(MdiIcons.heart,
+                          color: Colors.red, size: 75))),
+              Expanded(
+                  flex: 3,
+                  child: _InfoCard(
+                      title: history.last.temperature,
+                      icon: Icon(MdiIcons.thermometer,
+                          color: Colors.orange, size: 75))),
+              Expanded(
+                  flex: 3,
+                  child: _InfoCard(
+                      title: history.last.humidity,
+                      icon: Icon(MdiIcons.waterPercent,
+                          color: Colors.blue, size: 75))),
+            ],
+          ),
+          Text(
+            'You can see de t-shirt data in real time',
+          ),
+          Text(
+            _data,
+            style: Theme.of(context).textTheme.headline4,
+          ),
+          Expanded(child: HistoryList(history)),
+        ])));
+  }
+}
+
+class HistoryList extends StatefulWidget {
+  final List<TshirtData> historyItems;
+
+  HistoryList(this.historyItems);
+
+  @override
+  _HistoryListState createState() => _HistoryListState();
+}
+
+class _HistoryListState extends State<HistoryList> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: widget.historyItems.length,
+      itemBuilder: (context, index) {
+        var item = widget.historyItems[index];
+        return Card(
+            child: Row(children: <Widget>[
+          Expanded(
+              child: ListTile(
+                  title: Text(item.time +
+                      " " +
+                      item.heartFrequency +
+                      " " +
+                      item.temperature +
+                      " " +
+                      item.humidity)))
+        ]));
+      },
     );
   }
 }

@@ -29,6 +29,7 @@
             {
               "client_id": "1074031614350-usc8od2sni2ks2gder2egi5vkdspfdja.apps.googleusercontent.com",
               "client_type": 3
+<<<<<<< HEAD
             },
             {
               "client_id": "1074031614350-dgtffl8sakqpc1iu97t6vb7v2sbuj2e8.apps.googleusercontent.com",
@@ -36,6 +37,8 @@
               "ios_info": {
                 "bundle_id": "io.flutter.flutter.app"
               }
+=======
+>>>>>>> master
             }
           ]
         }
@@ -43,4 +46,8 @@
     }
   ],
   "configuration_version": "1"
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master
