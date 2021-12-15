@@ -11,6 +11,36 @@ class DbService {
   //init db reference
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
+  ///Create user (call after sign up)
+  ///
+  ///userId : created user id in sign up process
+  ///
+  ///firstName : user first name
+  ///
+  ///lastName : user last name
+  Future<void> createUser(String userId, String firstName, String lastName) {
+    return users
+        .doc(userId)
+        .set({"FirstName": firstName, "LastName": lastName, "Sessions": []})
+        .then((value) => log("User created"))
+        .catchError((error) => log("Failed to create user: $error"));
+  }
+
+  ///Update user
+  ///
+  ///userId : created user id in sign up process
+  ///
+  ///firstName : user first name
+  ///
+  ///lastName : user last name
+  Future<void> updateUser(String userId, String firstName, String lastName) {
+    return users
+        .doc(userId)
+        .update({"FirstName": firstName, "LastName": lastName})
+        .then((value) => log("User updated"))
+        .catchError((error) => log("Failed to update user: $error"));
+  }
+
   ///Saving session by user
   ///
   ///userId: signed in user
@@ -40,7 +70,7 @@ class DbService {
   Future<List<List<TshirtData>>> getDataByUserAndDate(
       String userId, DateTime date) async {
     List<List<TshirtData>> result = [];
-    users.doc(userId).get().then((DocumentSnapshot documentSnapshot) {
+    await users.doc(userId).get().then((DocumentSnapshot documentSnapshot) {
       //if user exist
       if (documentSnapshot.exists) {
         //get user sessions
@@ -55,7 +85,6 @@ class DbService {
             List<TshirtData> dataList = [];
             element["Data"].forEach((string) {
               var stringArr = string.split(" ").asMap();
-
               TshirtData data = TshirtData(
                   time: stringArr[0],
                   heartFrequency: stringArr[1],
@@ -63,6 +92,7 @@ class DbService {
                   humidity: stringArr[3]);
               dataList.add(data);
             });
+
             result.add(dataList);
           }
         });

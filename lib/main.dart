@@ -56,10 +56,33 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     var data = "No t-shirt connected!";
-    DbService db = DbService();
-    var res = db.getDataByUserAndDate("2", DateTime.now());
-    log(res.toString());
 
+    //-------------------------------------------db test start
+    List<TshirtData> test = [
+      TshirtData(
+          time: "testTime",
+          heartFrequency: "testFreq",
+          temperature: "testTemp",
+          humidity: "testHum"),
+      TshirtData(
+          time: "testTime",
+          heartFrequency: "testFreq",
+          temperature: "testTemp",
+          humidity: "testHum")
+    ];
+
+    DbService db = DbService();
+    //db.createUser("3", "Jac", "Sparow");
+    //db.updateUser("3", "Jack", "Sparrow");
+    //db.saveSession("3", test);
+    db.getDataByUserAndDate("3", DateTime.now()).then((listOfList) {
+      listOfList.forEach((listOfdata) {
+        listOfdata.forEach((data) {
+          log(data.toString());
+        });
+      });
+    });
+    //-------------------------------------------------db test end
     //We increment a timer every 2 secondes the get the data and we put the get data methode inside the timer
     Timer mytimer = Timer.periodic(Duration(seconds: 2), (timer) {
       //Methode that will connect the application with the web server in this ip (192.168.4.2) and get the data
@@ -67,19 +90,6 @@ class _HomePageState extends State<HomePage> {
       //res.then((value) => {value.map((e) => data + " " + e)});
       res.then((value) => data = value.toString());
 
-      List<TshirtData> test = [
-        TshirtData(
-            time: "testTime",
-            heartFrequency: "testFreq",
-            temperature: "testTemp",
-            humidity: "testHum"),
-        TshirtData(
-            time: "testTime",
-            heartFrequency: "testFreq",
-            temperature: "testTemp",
-            humidity: "testHum")
-      ];
-      db.saveSession("1", test);
       setState(() {
         _data = data;
       });
