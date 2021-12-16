@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
           _data = data;
           data = "";
           List<String> values = _data.split(" ");
-          history.add(TshirtData(time: values[0], heartFrequency: values[1], temperature: values[2], humidity: values[3]));
+          history.add(TshirtData(time: values[0], heartFrequency: int.parse(values[1]), temperature: int.parse(values[2]), humidity: int.parse(values[3])));
 
           textConnectedTshirt = "T-shirt connected! ("+history.last.time+")";
 
@@ -134,15 +134,15 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   Expanded(
                     flex: 3,
-                      child: _InfoCard(title: history.last.heartFrequency, icon: const Icon(MdiIcons.heart,color: Colors.red, size: 75))
+                      child: _InfoCard(title: history.last.heartFrequency.toString(), icon: const Icon(MdiIcons.heart,color: Colors.red, size: 75))
                   ),
                   Expanded(
                       flex: 3,
-                      child:_InfoCard(title: history.last.temperature, icon: Icon(MdiIcons.thermometer,color: Colors.orange, size: 75))
+                      child:_InfoCard(title: history.last.temperature.toString(), icon: Icon(MdiIcons.thermometer,color: Colors.orange, size: 75))
                   ),
                   Expanded(
                       flex: 3,
-                      child:_InfoCard(title: history.last.humidity, icon: Icon(MdiIcons.waterPercent,color: Colors.blue, size:75))
+                      child:_InfoCard(title: history.last.humidity.toString(), icon: Icon(MdiIcons.waterPercent,color: Colors.blue, size:75))
                   ),
 
                 ],
@@ -174,7 +174,7 @@ class _HistoryListState extends State<HistoryList> {
       itemCount: widget.historyItems.length,
       itemBuilder: (context, index) {
         var item = widget.historyItems[index];
-        return Card(child: Row(children: <Widget>[Expanded(child: ListTile(title: Text(item.time + " " + item.heartFrequency + " " + item.temperature + " " + item.humidity)))]));
+        return Card(child: Row(children: <Widget>[Expanded(child: ListTile(title: Text(item.time + " " + item.heartFrequency.toString() + " " + item.temperature.toString() + " " + item.humidity.toString())))]));
       },
     );
   }
