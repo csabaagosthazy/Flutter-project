@@ -18,12 +18,15 @@ class DbService {
   ///firstName : user first name
   ///
   ///lastName : user last name
-  Future<void> createUser(String userId, String firstName, String lastName) {
+  ///
+  ///Returns database transaction result
+  Future<String> createUser(
+      String userId, String firstName, String lastName) async {
     return users
         .doc(userId)
         .set({"FirstName": firstName, "LastName": lastName, "Sessions": []})
-        .then((value) => log("User created"))
-        .catchError((error) => log("Failed to create user: $error"));
+        .then((value) => "User created")
+        .catchError((error) => "Failed to create user: $error");
   }
 
   ///Update user
@@ -33,12 +36,15 @@ class DbService {
   ///firstName : user first name
   ///
   ///lastName : user last name
-  Future<void> updateUser(String userId, String firstName, String lastName) {
+  ///
+  ///Returns database transaction result
+  Future<String> updateUser(
+      String userId, String firstName, String lastName) async {
     return users
         .doc(userId)
         .update({"FirstName": firstName, "LastName": lastName})
-        .then((value) => log("User updated"))
-        .catchError((error) => log("Failed to update user: $error"));
+        .then((value) => "User updated")
+        .catchError((error) => "Failed to update user: $error");
   }
 
   ///Saving session by user
@@ -48,7 +54,7 @@ class DbService {
   ///data: Session data list
   ///
   ///Returns database transaction result
-  Future<void> saveSession(String userId, List<TshirtData> data) async {
+  Future<String> saveSession(String userId, List<TshirtData> data) async {
     //Thsirt data to string list
     List<String> stringList = [];
     data.forEach((element) {
@@ -58,10 +64,10 @@ class DbService {
       {"Data": stringList, "Timestamp": DateTime.now()}
     ];
     DocumentReference _ref = users.doc(userId);
-    _ref
+    return _ref
         .update({"Sessions": FieldValue.arrayUnion(toStore)})
-        .then((value) => log("Session saved"))
-        .catchError((error) => log("Failed to save session: $error"));
+        .then((value) => "Session saved")
+        .catchError((error) => "Failed to save session: $error");
   }
 
   ///Get user session by user id and date

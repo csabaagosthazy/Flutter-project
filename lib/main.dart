@@ -104,9 +104,9 @@ class _HomePageState extends State<HomePage> {
     ];
 
     DbService db = DbService();
-    //db.createUser("3", "Jac", "Sparow");
-    //db.updateUser("3", "Jack", "Sparrow");
-    //db.saveSession("3", test);
+    db.createUser("3", "Jac", "Sparow").then((res) => log(res));
+    db.updateUser("3", "Jack", "Sparrow").then((res) => log(res));
+    db.saveSession("3", test).then((res) => log(res));
     db.getDataByUserAndDate("3", DateTime.now()).then((listOfList) {
       listOfList.forEach((listOfdata) {
         listOfdata.forEach((data) {
@@ -118,9 +118,7 @@ class _HomePageState extends State<HomePage> {
     //We increment a timer every 2 secondes the get the data and we put the get data methode inside the timer
     Timer.periodic(const Duration(seconds: 2), (timer) async {
       //Methode that will connect the application with the web server in this ip (192.168.4.2) and get the data
-      Future<dynamic> res = conn.getData();
-      //res.then((value) => {value.map((e) => data + " " + e)});
-      var data = await res.then((value) => value);
+      var data = await conn.getData();
 
       setState(() {
         if (data.toString().isNotEmpty) {
