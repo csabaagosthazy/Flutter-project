@@ -1,49 +1,41 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '/tshirt_data.dart';
 
 class TshirtConnection {
   String url;
 
-
-  //Constructor
   TshirtConnection({required this.url});
 
   Future<TshirtData> getData() async {
-    late Map<int, String> res;
+    final http.Response response;
 
-    //Connect to the server IP
-    //http://192.168.4.2
-    //https://tshirtserver.herokuapp.com/
-    final response = await http.get(Uri.parse(url));
+    response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      res = response.body.split(" ").asMap();
+      var responseItems = response.body.split(" ");
+
+      // The t-shirt returns [uptime] [heartbeat rate] [temperature] [humidity],
+      // if no error has occurred.
+      if(responseItems.length < 4) {
+        throw Exception("The t-shirt did not return 4 elements in the text response");
+      }
+
+      var tshirtUptime = responseItems[1];
+      var heartBeatRate = int.parse(responseItems[1]);
+      var temperature = int.parse(responseItems[2]);
+      var humidity = int.parse(responseItems[3]);
+
       TshirtData data = TshirtData(
-          time: res[0],
-          heartFrequency: res[1],
-          temperature: res[2],
-          humidity: res[3]);
+          time: tshirtUptime,
+          heartFrequency: heartBeatRate,
+          temperature: temperature,
+          humidity: humidity
+      );
 
       return data;
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to connect to t-shirt');
+      throw Exception('Unable to connect to the t-shirt server');
     }
   }
 }
-/* 
-
-  final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      return response.body;
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      return 'Failed to connect to t-shirt';
-    } */
