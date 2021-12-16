@@ -19,12 +19,4 @@ class TshirtData {
         + temperature.toString() + " "
         + humidity.toString();
   }
-
-  factory TshirtData.fromJson(Map<String, dynamic> json) {
-    return TshirtData(
-        time: json['Time'] as String,
-        heartFrequency: json['HeartFrequency'] as int,
-        temperature: json['Temperature'] as int,
-        humidity: json['Humidity'] as int);
-  }
 }
