@@ -1,8 +1,8 @@
 class TshirtData {
-  var time;
-  var heartFrequency;
-  var temperature;
-  var humidity;
+   String time;
+   int heartFrequency;
+   int temperature;
+   int humidity;
 
   //Constructor
   TshirtData({
@@ -14,14 +14,17 @@ class TshirtData {
 
   @override
   String toString() {
-    return time + " " + heartFrequency + " " + temperature + " " + humidity;
+    return time + " "
+        + heartFrequency.toString() + " "
+        + temperature.toString() + " "
+        + humidity.toString();
   }
 
   factory TshirtData.fromJson(Map<String, dynamic> json) {
     return TshirtData(
-        time: DateTime.parse(json['Time'] as String),
-        heartFrequency: json['HeartFrequency'] as String,
-        temperature: json['Temperature'] as String,
-        humidity: json['Humidity'] as String);
+        time: json['Time'] as String,
+        heartFrequency: json['HeartFrequency'] as int,
+        temperature: json['Temperature'] as int,
+        humidity: json['Humidity'] as int);
   }
 }
