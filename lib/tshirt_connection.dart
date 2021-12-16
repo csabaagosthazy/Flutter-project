@@ -7,6 +7,19 @@ class TshirtConnection {
 
   TshirtConnection({required this.url});
 
+  /// Requests and returns the metrics returned by the connected t-shirt server located at [url].
+  ///
+  /// The data returned by the t-shirt server is encapsulated into a [TshirtData] data class,
+  /// so the return is strongly typed.
+  ///
+  /// Throws explicitly:
+  /// - [Exception] when receiving a bad response from the server. Bad responses encompass:
+  ///   - insufficient items in the text response
+  ///   - HTTP code not 200
+  ///
+  /// Throws implicitly:
+  /// - when parsing text response items into an integer failed
+  /// - when the client is unable to send an HTTP request to the server
   Future<TshirtData> getData() async {
     final http.Response response;
 
