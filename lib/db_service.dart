@@ -26,7 +26,8 @@ class DbService {
         .doc(userId)
         .set({"FirstName": firstName, "LastName": lastName, "Sessions": []})
         .then((value) => "User created")
-        .catchError((error) => "Failed to create user: $error");
+        .catchError(
+            (error) => throw Exception("Failed to create user: $error"));
   }
 
   ///Update user
@@ -44,7 +45,8 @@ class DbService {
         .doc(userId)
         .update({"FirstName": firstName, "LastName": lastName})
         .then((value) => "User updated")
-        .catchError((error) => "Failed to update user: $error");
+        .catchError(
+            (error) => throw Exception("Failed to update user: $error"));
   }
 
   ///Saving session by user
@@ -67,7 +69,8 @@ class DbService {
     return _ref
         .update({"Sessions": FieldValue.arrayUnion(toStore)})
         .then((value) => "Session saved")
-        .catchError((error) => "Failed to save session: $error");
+        .catchError(
+            (error) => throw Exception("Failed to save session: $error"));
   }
 
   ///Get user session by user id and date
@@ -102,8 +105,6 @@ class DbService {
             result.add(dataList);
           }
         });
-      } else {
-        log("User id does not exist!");
       }
     });
     return result;

@@ -107,13 +107,13 @@ class _HomePageState extends State<HomePage> {
     db.createUser("3", "Jac", "Sparow").then((res) => log(res));
     db.updateUser("3", "Jack", "Sparrow").then((res) => log(res));
     db.saveSession("3", test).then((res) => log(res));
-    db.getDataByUserAndDate("3", DateTime.now()).then((listOfList) {
+    db.getDataByUserAndDate("4", DateTime.now()).then((listOfList) {
       listOfList.forEach((listOfdata) {
         listOfdata.forEach((data) {
           log(data.toString());
         });
       });
-    });
+    }).catchError((e) => log(e));
     //-------------------------------------------------db test end
     //We increment a timer every 2 secondes the get the data and we put the get data methode inside the timer
     Timer.periodic(const Duration(seconds: 2), (timer) async {
