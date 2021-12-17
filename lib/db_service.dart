@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:developer';
 import 'package:intl/intl.dart';
 
 import 'data/tshirt_data.dart';
