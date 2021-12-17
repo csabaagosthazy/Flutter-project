@@ -7,16 +7,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_group2_tshirt_project/tshirt_data.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '/tshirt_connection.dart';
-
+import '/tshirt_data.dart';
+import '/db_service.dart';
+import 'dart:developer';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   runApp(const MyApp());
 
   WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -44,12 +44,13 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+
 /// This is the stateless widget that the main application instantiates.
 class _InfoCard extends StatelessWidget {
   const _InfoCard({required this.title, required this.icon});
 
-   final String title;
-   final Icon icon;
+  final String title;
+  final Icon icon;
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +61,11 @@ class _InfoCard extends StatelessWidget {
           onTap: () {
             print('Card tapped.');
           },
-          child: Column(
-                children: [
-                  icon,
-                  Center(child: Text(title),)
+          child: Column(children: [
+            icon,
+            Center(
+              child: Text(title),
+            )
           ]),
         ),
       ),
@@ -74,6 +76,7 @@ class _InfoCard extends StatelessWidget {
 class _HomePageState extends State<HomePage> {
   //Variable that get all the data from the t-shirt
   String _data = "";
+  String _test = "";
   String textConnectedTshirt = "No t-shirt connected!";
 
   // List of variables
@@ -86,25 +89,49 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    String data = "";
+
+    //-------------------------------------------db test start
+    List<TshirtData> test = [
+      TshirtData(
+          time: "testTime",
+          heartFrequency: "testFreq",
+          temperature: "testTemp",
+          humidity: "testHum"),
+      TshirtData(
+          time: "testTime",
+          heartFrequency: "testFreq",
+          temperature: "testTemp",
+          humidity: "testHum")
+    ];
+
+    DbService db = DbService();
+
+    db.createUser("3", "Jac", "Sparow").catchError((e) => log(e));
+
+    db.updateUser("3", "Jack", "Sparrow").catchError((e) => log(e));
+    db.saveSession("3", test).catchError((e) => log(e));
+
+    db.getDataByUserAndDate("3", DateTime.now()).then((listOfList) {
+      listOfList.forEach((listOfdata) {
+        listOfdata.forEach((data) {
+          log(data.toString());
+        });
+      });
+    }).catchError((e) => log(e));
+    //-------------------------------------------------db test end
     //We increment a timer every 2 secondes the get the data and we put the get data methode inside the timer
-    Timer.periodic(const Duration(seconds: 2), (timer) {
+    Timer.periodic(const Duration(seconds: 2), (timer) async {
       //Methode that will connect the application with the web server in this ip (192.168.4.2) and get the data
-      Future<dynamic> res = conn.getData();
-      //res.then((value) => {value.map((e) => data + " " + e)});
-      res.then((value) => data = value.toString());
+      var data = await conn.getData();
 
       setState(() {
-        if(data.isNotEmpty) {
-          _data = data;
-          data = "";
-          List<String> values = _data.split(" ");
-          history.add(TshirtData(time: values[0], heartFrequency: values[1], temperature: values[2], humidity: values[3]));
+        if (data.toString().isNotEmpty) {
+          _data = data.toString();
+          history.add(data);
 
-          textConnectedTshirt = "T-shirt connected! ("+history.last.time+")";
-
+          textConnectedTshirt =
+              "T-shirt connected! (" + history.last.time + ")";
         }
-
       });
     });
   }
@@ -118,43 +145,48 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child:
-            Column(children: <Widget>[
-              Center(child: Text(textConnectedTshirt)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Expanded(
-                    flex: 3,
-                      child: _InfoCard(title: history.last.heartFrequency, icon: const Icon(MdiIcons.heart,color: Colors.red, size: 75))
-                  ),
-                  Expanded(
-                      flex: 3,
-                      child:_InfoCard(title: history.last.temperature, icon: Icon(MdiIcons.thermometer,color: Colors.orange, size: 75))
-                  ),
-                  Expanded(
-                      flex: 3,
-                      child:_InfoCard(title: history.last.humidity, icon: Icon(MdiIcons.waterPercent,color: Colors.blue, size:75))
-                  ),
-
-                ],
-              ),
-
-                  Text('You can see de t-shirt data in real time',),
-                  Text(_data,style: Theme.of(context).textTheme.headline4,),
-                  Expanded(child: HistoryList(history)),
-      ]))
-
-    );
-
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(widget.title),
+        ),
+        body: Center(
+            // Center is a layout widget. It takes a single child and positions it
+            // in the middle of the parent.
+            child: Column(children: <Widget>[
+          Center(child: Text(textConnectedTshirt)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                  flex: 3,
+                  child: _InfoCard(
+                      title: history.last.heartFrequency,
+                      icon: const Icon(MdiIcons.heart,
+                          color: Colors.red, size: 75))),
+              Expanded(
+                  flex: 3,
+                  child: _InfoCard(
+                      title: history.last.temperature,
+                      icon: Icon(MdiIcons.thermometer,
+                          color: Colors.orange, size: 75))),
+              Expanded(
+                  flex: 3,
+                  child: _InfoCard(
+                      title: history.last.humidity,
+                      icon: Icon(MdiIcons.waterPercent,
+                          color: Colors.blue, size: 75))),
+            ],
+          ),
+          Text(
+            'You can see de t-shirt data in real time',
+          ),
+          Text(
+            _data,
+            style: Theme.of(context).textTheme.headline4,
+          ),
+          Expanded(child: HistoryList(history)),
+        ])));
   }
 }
 
@@ -174,9 +206,19 @@ class _HistoryListState extends State<HistoryList> {
       itemCount: widget.historyItems.length,
       itemBuilder: (context, index) {
         var item = widget.historyItems[index];
-        return Card(child: Row(children: <Widget>[Expanded(child: ListTile(title: Text(item.time + " " + item.heartFrequency + " " + item.temperature + " " + item.humidity)))]));
+        return Card(
+            child: Row(children: <Widget>[
+          Expanded(
+              child: ListTile(
+                  title: Text(item.time +
+                      " " +
+                      item.heartFrequency +
+                      " " +
+                      item.temperature +
+                      " " +
+                      item.humidity)))
+        ]));
       },
     );
   }
 }
-
