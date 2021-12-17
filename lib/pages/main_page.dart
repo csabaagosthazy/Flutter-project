@@ -31,46 +31,14 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-//Need to take real data from Firebase:
-
-  List<ChartData> dataHeart = [
-    ChartData('0:00', 80),
-    ChartData('0:15', 100),
-    ChartData('0:20', 88),
-    ChartData('0:30', 78),
-    ChartData('0:40', 65),
-    ChartData('0:50', 77),
-    ChartData('0:60', 74)
-  ];
-
-  List<ChartData> dataTemp = [
-    ChartData('0:00', 37),
-    ChartData('0:15', 36.6),
-    ChartData('0:20', 37.1),
-    ChartData('0:30', 36.5),
-    ChartData('0:40', 36.4),
-    ChartData('0:50', 36.2),
-    ChartData('0:60', 36.6)
-  ];
-
-  List<ChartData> dataHum = [
-    ChartData('0:00', 66),
-    ChartData('0:15', 64),
-    ChartData('0:20', 65),
-    ChartData('0:30', 56),
-    ChartData('0:40', 59),
-    ChartData('0:50', 62),
-    ChartData('0:60', 54)
-  ];
-
   List<ChartData> listOfValuesWithTime(String indicator) {
     switch (indicator) {
       case 'humidity':
-        return dataHum;
+        return getDataHum(history);
       case 'temperature':
-        return dataTemp;
+        return getDataTemp(history);
       default:
-        return dataHeart;
+        return getDataHeart(history);
     }
   }
 
@@ -173,5 +141,32 @@ class _MainPageState extends State<MainPage> {
       ))
       //    Expanded(child: HistoryList(history)),
     ])));
+  }
+
+  List<ChartData> getDataHeart(List<TshirtData> gHistory) {
+    List<ChartData> myChartDataList = List.empty(growable: true);
+    for (TshirtData tdata in gHistory) {
+      ChartData tempChartData = ChartData(tdata.time, double.parse(tdata.heartFrequency));
+      myChartDataList.add(tempChartData);
+    }
+    return myChartDataList;
+  }
+
+  List<ChartData> getDataTemp(List<TshirtData> gHistory) {
+    List<ChartData> myChartDataList = List.empty(growable: true);
+    for (TshirtData tdata in gHistory) {
+      ChartData tempChartData = ChartData(tdata.time, double.parse(tdata.temperature));
+      myChartDataList.add(tempChartData);
+    }
+    return myChartDataList;
+  }
+  
+  List<ChartData> getDataHum(List<TshirtData> gHistory) {
+    List<ChartData> myChartDataList = List.empty(growable: true);
+    for (TshirtData tdata in gHistory) {
+      ChartData tempChartData = ChartData(tdata.time, double.parse(tdata.humidity));
+      myChartDataList.add(tempChartData);
+    }
+    return myChartDataList;
   }
 }
