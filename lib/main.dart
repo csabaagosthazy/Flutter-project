@@ -104,10 +104,13 @@ class _HomePageState extends State<HomePage> {
     ];
 
     DbService db = DbService();
-    db.createUser("3", "Jac", "Sparow").then((res) => log(res));
-    db.updateUser("3", "Jack", "Sparrow").then((res) => log(res));
-    db.saveSession("3", test).then((res) => log(res));
-    db.getDataByUserAndDate("4", DateTime.now()).then((listOfList) {
+
+    db.createUser("3", "Jac", "Sparow").catchError((e) => log(e));
+
+    db.updateUser("3", "Jack", "Sparrow").catchError((e) => log(e));
+    db.saveSession("3", test).catchError((e) => log(e));
+
+    db.getDataByUserAndDate("3", DateTime.now()).then((listOfList) {
       listOfList.forEach((listOfdata) {
         listOfdata.forEach((data) {
           log(data.toString());
@@ -123,7 +126,6 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         if (data.toString().isNotEmpty) {
           _data = data.toString();
-          log(data.toString());
           history.add(data);
 
           textConnectedTshirt =
