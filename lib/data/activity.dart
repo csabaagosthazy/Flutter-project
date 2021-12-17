@@ -59,7 +59,8 @@ class _ActivityState extends State<Activity> {
 List<ChartData> getDataHeart(List<TshirtData> gHistory) {
     List<ChartData> myChartDataList = List.empty(growable: true);
     for (TshirtData tdata in gHistory) {
-      ChartData tempChartData = ChartData(tdata.time, double.parse(tdata.heartFrequency));
+      print(tdata.heartFrequency);
+      ChartData tempChartData = ChartData(tdata.time, tdata.heartFrequency);
       myChartDataList.add(tempChartData);
     }
     return myChartDataList;
@@ -68,7 +69,7 @@ List<ChartData> getDataHeart(List<TshirtData> gHistory) {
   List<ChartData> getDataTemp(List<TshirtData> gHistory) {
     List<ChartData> myChartDataList = List.empty(growable: true);
     for (TshirtData tdata in gHistory) {
-      ChartData tempChartData = ChartData(tdata.time, double.parse(tdata.temperature));
+      ChartData tempChartData = ChartData(tdata.time, tdata.temperature);
       myChartDataList.add(tempChartData);
     }
     return myChartDataList;
@@ -77,7 +78,7 @@ List<ChartData> getDataHeart(List<TshirtData> gHistory) {
   List<ChartData> getDataHum(List<TshirtData> gHistory) {
     List<ChartData> myChartDataList = List.empty(growable: true);
     for (TshirtData tdata in gHistory) {
-      ChartData tempChartData = ChartData(tdata.time, double.parse(tdata.humidity));
+      ChartData tempChartData = ChartData(tdata.time, tdata.humidity);
       myChartDataList.add(tempChartData);
     }
     return myChartDataList;
