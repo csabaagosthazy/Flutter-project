@@ -14,7 +14,7 @@ class TshirtData {
 
   @override
   String toString() {
-    return time + " " + heartFrequency + " " + temperature + " " + humidity;
+    return time.toString() + " " + heartFrequency.toString() + " " + temperature.toString() + " " + humidity.toString();
   }
 
   factory TshirtData.fromJson(Map<String, dynamic> json) {
