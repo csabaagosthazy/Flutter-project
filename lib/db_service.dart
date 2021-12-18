@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
+import 'data/activity_data.dart';
 import 'data/tshirt_data.dart';
 
 // Cloud firestore database class
@@ -65,7 +66,7 @@ class DbService {
 
   ///Get user session by user id and date
   ///
-  ///Returns a List of Thsirt data list
+  ///Returns a List of Tshirt data list
   Future<List<List<TshirtData>>> getDataByUserAndDate(
       String userId, DateTime date) async {
     DateFormat dateFormat = DateFormat('yyyy-MM-dd');
@@ -99,6 +100,38 @@ class DbService {
 
           result.add(dataList);
         }
+      }
+    }
+    return result;
+  }
+
+  ///Get user session by user id
+  ///
+  ///Returns a List of activity data
+  Future<List<ActivityData>> getDataByUser(
+      String userId) async {
+    DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+    List<ActivityData> result = [];
+    DocumentSnapshot documentSnapshot = await users.doc(userId).get();
+    //if user exist
+    if (documentSnapshot.exists) {
+      //get user sessions
+      List<dynamic> sessions = documentSnapshot.get("Sessions");
+      for (final element in sessions) {
+        ActivityData currentActivityData;
+        String currentSessionDate = dateFormat.format(element["Timestamp"].toDate()).toString();
+        List<TshirtData> dataList = [];
+        for (final dataPoint in element["Data"]) {
+          var stringArr = dataPoint.split(" ");
+          TshirtData data = TshirtData(
+              time: stringArr[0],
+              heartFrequency: stringArr[1],
+              temperature: stringArr[2],
+              humidity: stringArr[3]);
+          dataList.add(data);
+        }
+        currentActivityData = ActivityData(dataList, currentSessionDate);
+        result.add(currentActivityData);
       }
     }
     return result;
