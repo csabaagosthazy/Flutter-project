@@ -95,13 +95,7 @@ class _MainPageState extends State<MainPage> {
       setState(() {
         if (data.isNotEmpty) {
           _data = data;
-          data = "";
-          List<String> values = _data.split(" ");
-          history.add(TshirtData(
-              time: values[0],
-              heartFrequency: values[1],
-              temperature: values[2],
-              humidity: values[3]));
+          history.add(TshirtData.fromString(_data));
 
           textConnectedTshirt =
               "T-shirt connected! (" + history.last.time + ")";
@@ -137,7 +131,7 @@ class _MainPageState extends State<MainPage> {
               child: InfoCard(
                   title: 'heartrate',
                   fun: changeLineChartBasedOnValue,
-                  value: history.last.heartFrequency,
+                  value: history.last.heartFrequency.toString(),
                   icon:
                       const Icon(MdiIcons.heart, color: Colors.red, size: 75))),
           Expanded(
@@ -145,7 +139,7 @@ class _MainPageState extends State<MainPage> {
               child: InfoCard(
                   title: 'temperature',
                   fun: changeLineChartBasedOnValue,
-                  value: history.last.temperature,
+                  value: history.last.temperature.toString(),
                   icon: const Icon(MdiIcons.thermometer,
                       color: Colors.orange, size: 75))),
           Expanded(
@@ -153,7 +147,7 @@ class _MainPageState extends State<MainPage> {
               child: InfoCard(
                   title: 'humidity',
                   fun: changeLineChartBasedOnValue,
-                  value: history.last.humidity,
+                  value: history.last.humidity.toString(),
                   icon: const Icon(MdiIcons.waterPercent,
                       color: Colors.blue, size: 75))),
         ],

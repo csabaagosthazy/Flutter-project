@@ -1,49 +1,34 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../data/tshirt_data.dart';
 
 class TshirtConnection {
   String url;
 
-
-  //Constructor
   TshirtConnection({required this.url});
 
+  /// Requests and returns the metrics returned by the connected t-shirt server located at [url].
+  ///
+  /// The data returned by the t-shirt server is encapsulated into a [TshirtData] data class,
+  /// so the return is strongly typed.
+  ///
+  /// Throws explicitly:
+  /// - [Exception] when receiving a bad response from the server. Bad responses encompass:
+  ///   - HTTP code not 200
+  ///
+  /// Throws implicitly:
+  /// - when parsing text response items into an integer failed
+  /// - when the client is unable to send an HTTP request to the server
+  /// - when the received string does not contain exactly four elements
   Future<TshirtData> getData() async {
-    late Map<int, String> res;
+    final http.Response response;
 
-    //Connect to the server IP
-    //http://192.168.4.2
-    //https://tshirtserver.herokuapp.com/
-    final response = await http.get(Uri.parse(url));
+    response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      res = response.body.split(" ").asMap();
-      TshirtData data = TshirtData(
-          time: res[0],
-          heartFrequency: res[1],
-          temperature: res[2],
-          humidity: res[3]);
-
-      return data;
+      return TshirtData.fromString(response.body);
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to connect to t-shirt');
+      throw Exception('Unable to connect to the t-shirt server');
     }
   }
 }
-/* 
-
-  final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      return response.body;
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      return 'Failed to connect to t-shirt';
-    } */

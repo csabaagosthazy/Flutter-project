@@ -21,13 +21,7 @@ class _HistoryListState extends State<HistoryList> {
             child: Row(children: <Widget>[
           Expanded(
               child: ListTile(
-                  title: Text(item.time +
-                      " " +
-                      item.heartFrequency +
-                      " " +
-                      item.temperature +
-                      " " +
-                      item.humidity)))
+                  title: Text(item.toString())))
         ]));
       },
     );
