@@ -13,6 +13,7 @@ class _HistoryListState extends State<HistoryList> {
 
   Future<List<ActivityData>> getDataFromDb() async {
     DbService db = DbService();
+    //TODO: change 2 with the current user when login is done
     return await db.getDataByUser("2");
   }
 
@@ -44,12 +45,15 @@ class _HistoryListState extends State<HistoryList> {
       design = Column(children: [
         Expanded(
             child: ActivityItem(
-                currentDate:
-                    historyActivity![historyActivity!.length - 1].activityDate,
-                totalDuration: historyActivity![historyActivity!.length - 1]
-                    .listTshirtData
-                    .last
-                    .time)),
+          currentDate:
+              historyActivity![historyActivity!.length - 1].activityDate,
+          totalDuration: historyActivity![historyActivity!.length - 1]
+              .listTshirtData
+              .last
+              .time,
+          currentDataTshirt:
+              historyActivity![historyActivity!.length - 1].listTshirtData,
+        )),
         Expanded(
             child: ActivityItem(
                 currentDate:
@@ -57,7 +61,9 @@ class _HistoryListState extends State<HistoryList> {
                 totalDuration: historyActivity![historyActivity!.length - 2]
                     .listTshirtData
                     .last
-                    .time)),
+                    .time,
+              currentDataTshirt:
+              historyActivity![historyActivity!.length - 2].listTshirtData,)),
         Expanded(
             child: ActivityItem(
                 currentDate:
@@ -65,7 +71,9 @@ class _HistoryListState extends State<HistoryList> {
                 totalDuration: historyActivity![historyActivity!.length - 3]
                     .listTshirtData
                     .last
-                    .time)),
+                    .time,
+              currentDataTshirt:
+              historyActivity![historyActivity!.length - 3].listTshirtData,)),
       ]);
     }
     return design;
