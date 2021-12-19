@@ -23,7 +23,7 @@ class _HistoryListState extends State<HistoryList> {
   Future<List<ActivityData>> getDataFromDb() async {
     DbService db = DbService();
     //TODO: change 2 with the current user when login is done
-    return await db.getDataByUser("2").catchError((error) => isConnectedToInternet = false);
+    return await db.getDataByUser("2");
   }
 
   ///Display the activity given in parms
@@ -41,7 +41,6 @@ class _HistoryListState extends State<HistoryList> {
     super.initState();
     getDataFromDb().then((value) => {
           setState(() {
-
             historyActivity = value;
           })
         });
@@ -56,7 +55,15 @@ class _HistoryListState extends State<HistoryList> {
 
     //display an activity
     if(isDisplayedOldActivity){
-      return oldActivity;
+      return Column(children: [
+        ElevatedButton(onPressed: (){
+          setState(() {
+            isDisplayedOldActivity = false;
+          });
+        }, child: Text("Close")),
+        Expanded(child: oldActivity,)
+
+      ],);
     }
 
     var design;
@@ -77,14 +84,7 @@ class _HistoryListState extends State<HistoryList> {
       for (int i = 0; i < min(3, historyActivity!.length); i++) {
         items.add(Expanded(
             child: ActivityItem(
-          currentDate:
-              historyActivity![historyActivity!.length - 1 - i].activityDate,
-          totalDuration: historyActivity![historyActivity!.length - 1 - i]
-              .listTshirtData
-              .last
-              .time,
-          currentDataTshirt:
-              historyActivity![historyActivity!.length - 1 - i].listTshirtData,
+            data: historyActivity![historyActivity!.length - 1 - i],
           onClick: displayLastActivity,
         )));
       }

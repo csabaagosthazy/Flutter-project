@@ -141,6 +141,9 @@ class _ActivityState extends State<Activity> {
 
   ///Call when the activity is start
   void startActivity() {
+    if(isStarted) {
+      return;
+    }
     TshirtData? data;
     isStarted = true;
     //We increment a timer every 2 secondes the get the data and we put the get data methode inside the timer
@@ -150,7 +153,6 @@ class _ActivityState extends State<Activity> {
       //res.then((value) => {value.map((e) => data + " " + e)});
       res.then((value) => data = value).catchError((error, stackTrace) {
         textConnectedTshirt = "T-shirt disconnected";
-
         if (history.length >= 3) {
           DbService db = DbService();
           db.saveSession("2", history);
@@ -182,6 +184,9 @@ class _ActivityState extends State<Activity> {
 
   ///Call when the activity is stop
   void stopActivity() {
+    if(!isStarted) {
+      return;
+    }
     timer!.cancel();
     history = List.empty(growable: true);
     firstTimeDuration = -1;
@@ -264,14 +269,14 @@ class _ActivityState extends State<Activity> {
           )));
     }
 
-    return Visibility(
-        visible: widget.canStart,
-        child: Column(children: <Widget>[
-          Row(children: [
+    return  Column(children: <Widget>[
+    Visibility(
+    visible: widget.canStart,
+        child:Row(children: [
             Center(child: Text(textConnectedTshirt)),
             ElevatedButton(
                 onPressed: () {
-                  if (isStarted) {
+                  if (isStarted && history.length >= 3) {
                     DbService db = DbService();
                     db.saveSession("2", history);
                     stopActivity();
@@ -282,8 +287,8 @@ class _ActivityState extends State<Activity> {
                 ,
                 child: isStarted ? const Text("Stop activity") : const Text(
                     "Start activity")),
-          ]),
+          ])),
           ...underButton
-        ]));
+        ]);
   }
 }
