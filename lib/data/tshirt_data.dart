@@ -33,7 +33,7 @@ class TshirtData {
       );
     }
 
-    time = items[1];
+    time = items[0];
     heartFrequency = int.parse(items[1]);
     temperature = int.parse(items[2]);
     humidity = int.parse(items[3]);

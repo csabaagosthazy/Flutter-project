@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_group2_tshirt_project/components/chart_data.dart';
 import 'package:flutter_group2_tshirt_project/components/info_card.dart';
 import 'package:flutter_group2_tshirt_project/components/line_chart.dart';
 import 'package:flutter_group2_tshirt_project/connection/tshirt_connection.dart';
+import 'package:flutter_group2_tshirt_project/data/history_list.dart';
 import 'package:flutter_group2_tshirt_project/data/tshirt_data.dart';
 import 'package:flutter_group2_tshirt_project/db_service.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -45,14 +45,12 @@ class _ActivityState extends State<Activity> {
   changeLineChartBasedOnValue(String indicator) {
     setState(() {
       this.indicator = indicator;
-      print(indicator);
     });
   }
 
   List<ChartData> getDataHeart(List<TshirtData> gHistory) {
     List<ChartData> myChartDataList = List.empty(growable: true);
     for (TshirtData tdata in gHistory) {
-      print(tdata.heartFrequency);
       ChartData tempChartData = ChartData(tdata.time, tdata.heartFrequency);
       myChartDataList.add(tempChartData);
     }
@@ -108,32 +106,26 @@ class _ActivityState extends State<Activity> {
   }
 
   void startActivity() {
-    String data = "";
+    TshirtData? data;
     isStarted = true;
     //We increment a timer every 2 secondes the get the data and we put the get data methode inside the timer
     timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       //Methode that will connect the application with the web server in this ip (192.168.4.2) and get the data
       Future<dynamic> res = conn.getData();
       //res.then((value) => {value.map((e) => data + " " + e)});
-      res.then((value) => data = value.toString());
+      res.then((value) => data = value);
 
       setState(() {
-        if (data.isNotEmpty) {
-          List<String> values = data.split(" ");
-          TshirtData item = TshirtData(
-              time: values[0],
-              heartFrequency: double.parse(values[1]),
-              temperature: double.parse(values[2]),
-              humidity: double.parse(values[3]));
+        if (data != null) {
           if (firstTimeDuration == -1) {
-            firstTimeDuration = _getDuration(item.time);
-            item.time = "0:0:0";
+            firstTimeDuration = _getDuration(data!.time);
+            data!.time = "0:0:0";
           } else {
-            item.time = _getDurationToTimeString(
-                _getDuration(item.time) - firstTimeDuration);
+            data!.time = _getDurationToTimeString(
+                _getDuration(data!.time) - firstTimeDuration);
           }
 
-          history.add(item);
+          history.add(data!);
 
           heartFrequencyTitle = history.last.heartFrequency.toString();
           humidityTitle = history.last.humidity.toString();
@@ -161,31 +153,33 @@ class _ActivityState extends State<Activity> {
     // TODO: implement initState
     super.initState();
     history = widget.history;
+    if (history.isNotEmpty) {
+      int avgHeartFrequency = 0;
+      int avgTemperature = 0;
+      int avgHumidity = 0;
+      for (TshirtData data in history) {
+        avgHeartFrequency += data.heartFrequency;
+        avgHumidity += data.humidity;
+        avgTemperature += data.temperature;
+      }
+      avgHeartFrequency = (avgHeartFrequency / history.length).floor();
+      avgHumidity = (avgHumidity / history.length).floor();
+      avgTemperature = (avgTemperature / history.length).floor();
+
+      heartFrequencyTitle = avgHeartFrequency.toString();
+      humidityTitle = avgHumidity.toString();
+      temperatureTitle = avgTemperature.toString();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-        body: Center(
-            // Center is a layout widget. It takes a single child and positions it
-            // in the middle of the parent.
-            child: Column(children: <Widget>[
-      Row(
-        children: [
-          Center(child: Text(textConnectedTshirt)),
-          Visibility(
-            child: ElevatedButton(
-                onPressed: () {
-                  isStarted ? stopActivity() : startActivity();
-                },
-                child:
-                    isStarted ? Text("Stop activity") : Text("Start activity")),
-            visible: widget.canStart,
-          )
-        ],
-      ),
-      Row(
+    List<Widget> underButton = List.empty(growable: true);
+
+    if (widget.canStart && !isStarted) {
+      underButton.add(Expanded(flex: 3, child: HistoryList()));
+    } else {
+      underButton.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Expanded(
@@ -213,21 +207,30 @@ class _ActivityState extends State<Activity> {
                   icon: const Icon(MdiIcons.waterPercent,
                       color: Colors.blue, size: 75))),
         ],
-      ),
-
-      const Text(
-        'You can see de t-shirt data in real time',
-      ),
-      Text(
+      ));
+      underButton.add(Text(
         _data,
         style: Theme.of(context).textTheme.headline4,
-      ),
-      Expanded(
+      ));
+      underButton.add(Expanded(
           child: Linechart(
         indicator: indicator,
         data: listOfValuesWithTime(indicator),
-      ))
+      )));
+    }
+
+    return Visibility(
+        child: Column(children: <Widget>[
+      Row(children: [
+        Center(child: Text(textConnectedTshirt)),
+        ElevatedButton(
+            onPressed: () {
+              isStarted ? stopActivity() : startActivity();
+            },
+            child: isStarted ? Text("Stop activity") : Text("Start activity")),
+      ]),
+      ...underButton
       //    Expanded(child: HistoryList(history)),
-    ])));
+    ]));
   }
 }

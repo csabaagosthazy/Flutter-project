@@ -125,9 +125,9 @@ class DbService {
           var stringArr = dataPoint.split(" ");
           TshirtData data = TshirtData(
               time: stringArr[0],
-              heartFrequency: stringArr[1],
-              temperature: stringArr[2],
-              humidity: stringArr[3]);
+              heartFrequency: int.parse(stringArr[1]),
+              temperature: int.parse(stringArr[2]),
+              humidity: int.parse(stringArr[3]));
           dataList.add(data);
         }
         currentActivityData = ActivityData(dataList, currentSessionDate);

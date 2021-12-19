@@ -25,13 +25,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    var design;
-    //TODO: don't forget to modify the false inside the if statement
-    if (false) {
-      design = Activity(canStart: true);
-    } else {
-      design = HistoryList();
-    }
-    return design;
+    return Activity(canStart: true);
   }
 }
