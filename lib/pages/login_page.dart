@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_group2_tshirt_project/components/login_field.dart';
 import 'package:flutter_group2_tshirt_project/components/profile.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_group2_tshirt_project/components/login_field.dart';
 
 import 'signup_page.dart';
 
