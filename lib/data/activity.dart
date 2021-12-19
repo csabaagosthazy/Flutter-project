@@ -29,7 +29,7 @@ class _ActivityState extends State<Activity> {
   late List<TshirtData> history;
 
   TshirtConnection conn =
-      TshirtConnection(url: 'https://tshirtserver.herokuapp.com/');
+  TshirtConnection(url: 'https://tshirtserver.herokuapp.com/');
   Timer? timer;
   String heartFrequencyTitle = "";
   String humidityTitle = "";
@@ -113,7 +113,15 @@ class _ActivityState extends State<Activity> {
       //Methode that will connect the application with the web server in this ip (192.168.4.2) and get the data
       Future<dynamic> res = conn.getData();
       //res.then((value) => {value.map((e) => data + " " + e)});
-      res.then((value) => data = value);
+      res.then((value) => data = value).catchError((error, stackTrace) {
+        textConnectedTshirt = "T-shirt disconnected";
+
+        if (history.length >= 3) {
+          DbService db = DbService();
+          db.saveSession("2", history);
+        }
+        stopActivity();
+      });
 
       setState(() {
         if (data != null) {
@@ -139,8 +147,6 @@ class _ActivityState extends State<Activity> {
 
   void stopActivity() {
     timer!.cancel();
-    DbService db = DbService();
-    db.saveSession("2", history);
     history = List.empty(growable: true);
     firstTimeDuration = -1;
     setState(() {
@@ -177,7 +183,7 @@ class _ActivityState extends State<Activity> {
     List<Widget> underButton = List.empty(growable: true);
 
     if (widget.canStart && !isStarted) {
-      underButton.add(Expanded(flex: 3, child: HistoryList()));
+     underButton.add(Expanded(flex: 3, child: HistoryList()));
     } else {
       underButton.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -189,7 +195,7 @@ class _ActivityState extends State<Activity> {
                   fun: changeLineChartBasedOnValue,
                   value: heartFrequencyTitle,
                   icon:
-                      const Icon(MdiIcons.heart, color: Colors.red, size: 75))),
+                  const Icon(MdiIcons.heart, color: Colors.red, size: 75))),
           Expanded(
               flex: 3,
               child: InfoCard(
@@ -210,27 +216,39 @@ class _ActivityState extends State<Activity> {
       ));
       underButton.add(Text(
         _data,
-        style: Theme.of(context).textTheme.headline4,
+        style: Theme
+            .of(context)
+            .textTheme
+            .headline4,
       ));
       underButton.add(Expanded(
           child: Linechart(
-        indicator: indicator,
-        data: listOfValuesWithTime(indicator),
-      )));
+            indicator: indicator,
+            data: listOfValuesWithTime(indicator),
+          )));
     }
 
     return Visibility(
+        visible: widget.canStart,
         child: Column(children: <Widget>[
-      Row(children: [
-        Center(child: Text(textConnectedTshirt)),
-        ElevatedButton(
-            onPressed: () {
-              isStarted ? stopActivity() : startActivity();
-            },
-            child: isStarted ? Text("Stop activity") : Text("Start activity")),
-      ]),
-      ...underButton
-      //    Expanded(child: HistoryList(history)),
-    ]));
+          Row(children: [
+            Center(child: Text(textConnectedTshirt)),
+            ElevatedButton(
+                onPressed: () {
+                  if (isStarted) {
+                    DbService db = DbService();
+                    db.saveSession("2", history);
+                    stopActivity();
+                  } else {
+                    startActivity();
+                  }
+                }
+                ,
+                child: isStarted ? const Text("Stop activity") : const Text(
+                    "Start activity")),
+          ]),
+          ...underButton
+          //    Expanded(child: HistoryList(history)),
+        ]));
   }
 }

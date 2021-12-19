@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/components/activity_item.dart';
 import '../db_service.dart';
-import 'activity.dart';
 import 'activity_data.dart';
 
 class HistoryList extends StatefulWidget {
@@ -14,12 +13,13 @@ class HistoryList extends StatefulWidget {
 class _HistoryListState extends State<HistoryList> {
   List<ActivityData>? historyActivity;
   bool isDisplayedOldActivity = false;
+  bool isConnectedToInternet = true;
   late Widget oldActivity;
 
   Future<List<ActivityData>> getDataFromDb() async {
     DbService db = DbService();
     //TODO: change 2 with the current user when login is done
-    return await db.getDataByUser("2");
+    return await db.getDataByUser("2").catchError((error) => isConnectedToInternet = false);
   }
 
   void displayLastActivity(Widget activity){
@@ -35,6 +35,7 @@ class _HistoryListState extends State<HistoryList> {
     super.initState();
     getDataFromDb().then((value) => {
           setState(() {
+
             historyActivity = value;
           })
         });
@@ -43,12 +44,19 @@ class _HistoryListState extends State<HistoryList> {
   @override
   Widget build(BuildContext context) {
 
+
+
+    if(!isConnectedToInternet){
+      return const Center(child: Text("Could not retrieve the data because you are not connected to Internet."),);
+    }
+
     if(isDisplayedOldActivity){
       return oldActivity;
     }
+
     var design;
     if (historyActivity == null) {
-      design =  Center(
+      design =  const Center(
         child: Text("Wait for a moment !"),
       );
     } else if (historyActivity!.isEmpty) {
