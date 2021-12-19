@@ -38,7 +38,6 @@ class _HistoryListState extends State<HistoryList> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getDataFromDb().then((value) => {
           setState(() {
@@ -50,26 +49,30 @@ class _HistoryListState extends State<HistoryList> {
 
   @override
   Widget build(BuildContext context) {
-
+    //Display a message if there is no connection
     if(!isConnectedToInternet){
       return const Center(child: Text("Could not retrieve the data because you are not connected to Internet."),);
     }
 
+    //display an activity
     if(isDisplayedOldActivity){
       return oldActivity;
     }
 
     var design;
+    // Wait because it is not loaded
     if (historyActivity == null) {
       design =  const Center(
         child: Text("Wait for a moment !"),
       );
+      // No data
     } else if (historyActivity!.isEmpty) {
       design = const Scaffold(
           body: Center(
         child: Text("No data to show"),
       ));
     } else {
+      //Display only the last 3 activities
       List<Widget> items = List.empty(growable: true);
       for (int i = 0; i < min(3, historyActivity!.length); i++) {
         items.add(Expanded(

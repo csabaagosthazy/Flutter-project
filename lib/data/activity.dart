@@ -284,7 +284,6 @@ class _ActivityState extends State<Activity> {
                     "Start activity")),
           ]),
           ...underButton
-          //    Expanded(child: HistoryList(history)),
         ]));
   }
 }
