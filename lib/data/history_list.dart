@@ -5,6 +5,7 @@ import 'package:flutter_group2_tshirt_project/components/activity_item.dart';
 import '../db_service.dart';
 import 'activity_data.dart';
 
+/// This is the stateful widget that Activity instantiates.
 class HistoryList extends StatefulWidget {
   @override
   _HistoryListState createState() => _HistoryListState();
@@ -16,13 +17,19 @@ class _HistoryListState extends State<HistoryList> {
   bool isConnectedToInternet = true;
   late Widget oldActivity;
 
+  ///Retrieve data from db for the current user
+  ///
+  ///Returns a List of activity data
   Future<List<ActivityData>> getDataFromDb() async {
     DbService db = DbService();
     //TODO: change 2 with the current user when login is done
     return await db.getDataByUser("2").catchError((error) => isConnectedToInternet = false);
   }
 
-  void displayLastActivity(Widget activity){
+  ///Display the activity given in parms
+  ///
+  /// activity : activity to display
+  void displayLastActivity(Widget activity) {
     setState(() {
       isDisplayedOldActivity = true;
       oldActivity = activity;
@@ -44,8 +51,6 @@ class _HistoryListState extends State<HistoryList> {
   @override
   Widget build(BuildContext context) {
 
-
-
     if(!isConnectedToInternet){
       return const Center(child: Text("Could not retrieve the data because you are not connected to Internet."),);
     }
@@ -65,23 +70,22 @@ class _HistoryListState extends State<HistoryList> {
         child: Text("No data to show"),
       ));
     } else {
-        List<Widget> items = List.empty(growable: true);
-        for(int i=0; i<min(3, historyActivity!.length); i++)
-          {
-            items.add(Expanded(
-                child: ActivityItem(
-                  currentDate:
-                  historyActivity![historyActivity!.length-1-i].activityDate,
-                  totalDuration: historyActivity![historyActivity!.length-1-i]
-                      .listTshirtData
-                      .last
-                      .time,
-                  currentDataTshirt:
-                  historyActivity![historyActivity!.length-1-i].listTshirtData,
-                  onClick: displayLastActivity,
-                )));
-          }
-          design = Container(child: Column(children: items));
+      List<Widget> items = List.empty(growable: true);
+      for (int i = 0; i < min(3, historyActivity!.length); i++) {
+        items.add(Expanded(
+            child: ActivityItem(
+          currentDate:
+              historyActivity![historyActivity!.length - 1 - i].activityDate,
+          totalDuration: historyActivity![historyActivity!.length - 1 - i]
+              .listTshirtData
+              .last
+              .time,
+          currentDataTshirt:
+              historyActivity![historyActivity!.length - 1 - i].listTshirtData,
+          onClick: displayLastActivity,
+        )));
+      }
+      design = Container(child: Column(children: items));
     }
     return design;
   }

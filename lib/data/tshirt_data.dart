@@ -26,11 +26,9 @@ class TshirtData {
     List<String> items = datapoints.split(" ");
 
     if (items.length != 4) {
-      throw Exception(
-          "Passed datapoint string must have exactly four items. " +
+      throw Exception("Passed datapoint string must have exactly four items. " +
           items.length.toString() +
-          " items found"
-      );
+          " items found");
     }
 
     time = items[0];
@@ -41,9 +39,12 @@ class TshirtData {
 
   @override
   String toString() {
-    return time + " "
-        + heartFrequency.toString() + " "
-        + temperature.toString() + " "
-        + humidity.toString();
+    return time +
+        " " +
+        heartFrequency.toString() +
+        " " +
+        temperature.toString() +
+        " " +
+        humidity.toString();
   }
 }

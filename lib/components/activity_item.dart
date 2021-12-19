@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/data/activity.dart';
 import 'package:flutter_group2_tshirt_project/data/tshirt_data.dart';
 
-/// This is the stateless widget that the main application instantiates.
+/// This is the stateless widget that HistoryList instantiates.
 class ActivityItem extends StatelessWidget {
   ActivityItem(
-      {Key? key, required this.currentDate, required this.totalDuration, required this.currentDataTshirt, this.onClick})
+      {Key? key,
+      required this.currentDate,
+      required this.totalDuration,
+      required this.currentDataTshirt,
+      this.onClick})
       : super(key: key);
 
   final String currentDate;
@@ -20,9 +24,8 @@ class ActivityItem extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.blue.withAlpha(30),
         onTap: () {
-
           onClick(Activity(history: currentDataTshirt));
-          },
+        },
         child: Row(
           children: <Widget>[
             Text(currentDate + " " + totalDuration),

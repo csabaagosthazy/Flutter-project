@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/data/activity.dart';
-import 'package:flutter_group2_tshirt_project/data/history_list.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
