@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/components/chart_data.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+
 class Linechart extends StatefulWidget {
   final String indicator;
   final List<ChartData> data;
