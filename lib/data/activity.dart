@@ -11,6 +11,7 @@ import 'package:flutter_group2_tshirt_project/data/tshirt_data.dart';
 import 'package:flutter_group2_tshirt_project/db_service.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+/// This is the stateful widget that MainPage instantiates.
 class Activity extends StatefulWidget {
   final bool canStart;
   late List<TshirtData> history;
@@ -42,12 +43,20 @@ class _ActivityState extends State<Activity> {
   bool isStarted = false;
   int firstTimeDuration = -1;
 
-  changeLineChartBasedOnValue(String indicator) {
+  ///Update the indicator
+  ///
+  ///indicator: the indicator that we want to display on the graph
+  void changeLineChartBasedOnValue(String indicator) {
     setState(() {
       this.indicator = indicator;
     });
   }
 
+  ///Get heart frequency data from the Tshirt
+  ///
+  ///gHistory : All data from the Tshirt
+  ///
+  ///Returns a list a chart data to feed the graph
   List<ChartData> getDataHeart(List<TshirtData> gHistory) {
     List<ChartData> myChartDataList = List.empty(growable: true);
     for (TshirtData tdata in gHistory) {
@@ -57,6 +66,11 @@ class _ActivityState extends State<Activity> {
     return myChartDataList;
   }
 
+  ///Get temperature data from the Tshirt
+  ///
+  ///gHistory : All data from the Tshirt
+  ///
+  ///Returns a list a chart data to feed the graph
   List<ChartData> getDataTemp(List<TshirtData> gHistory) {
     List<ChartData> myChartDataList = List.empty(growable: true);
     for (TshirtData tdata in gHistory) {
@@ -66,6 +80,11 @@ class _ActivityState extends State<Activity> {
     return myChartDataList;
   }
 
+  ///Get humidity data from the Tshirt
+  ///
+  ///gHistory : All data from the Tshirt
+  ///
+  ///Returns a list a chart data to feed the graph
   List<ChartData> getDataHum(List<TshirtData> gHistory) {
     List<ChartData> myChartDataList = List.empty(growable: true);
     for (TshirtData tdata in gHistory) {
@@ -75,6 +94,11 @@ class _ActivityState extends State<Activity> {
     return myChartDataList;
   }
 
+  ///Change the current chart base on indicator
+  ///
+  ///indicator : the indicator that we want to display on the graph
+  ///
+  ///Returns a list of chart data
   List<ChartData> listOfValuesWithTime(String indicator) {
     switch (indicator) {
       case 'humidity':
@@ -86,6 +110,11 @@ class _ActivityState extends State<Activity> {
     }
   }
 
+  ///Convert the time in int
+  ///
+  ///time : The time in String
+  ///
+  ///Returns the time in int
   int _getDuration(String time) {
     var itemTimes = time.split(":");
     return int.parse(itemTimes[0]) * 3600 +
@@ -93,6 +122,11 @@ class _ActivityState extends State<Activity> {
         int.parse(itemTimes[2]);
   }
 
+  ///Convert the time in String
+  ///
+  ///duration: The duration in int
+  ///
+  ///Returns the duration in String
   String _getDurationToTimeString(int duration) {
     int hours = (duration / 3600).floor();
     duration = duration % 3600;
@@ -105,6 +139,7 @@ class _ActivityState extends State<Activity> {
         seconds.toString();
   }
 
+  ///Call when the activity is start
   void startActivity() {
     TshirtData? data;
     isStarted = true;
@@ -137,6 +172,7 @@ class _ActivityState extends State<Activity> {
     });
   }
 
+  ///Call when the activity is stop
   void stopActivity() {
     timer!.cancel();
     DbService db = DbService();

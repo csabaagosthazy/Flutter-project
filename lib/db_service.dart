@@ -66,6 +66,10 @@ class DbService {
 
   ///Get user session by user id and date
   ///
+  ///userId: signed in user
+  ///
+  ///data: Session data list
+  ///
   ///Returns a List of Tshirt data list
   Future<List<List<TshirtData>>> getDataByUserAndDate(
       String userId, DateTime date) async {
@@ -107,9 +111,12 @@ class DbService {
 
   ///Get user session by user id
   ///
+  ///userId: signed in user
+  ///
+  ///data: Session data list
+  ///
   ///Returns a List of activity data
-  Future<List<ActivityData>> getDataByUser(
-      String userId) async {
+  Future<List<ActivityData>> getDataByUser(String userId) async {
     DateFormat dateFormat = DateFormat('yyyy-MM-dd');
     List<ActivityData> result = [];
     DocumentSnapshot documentSnapshot = await users.doc(userId).get();
@@ -119,7 +126,8 @@ class DbService {
       List<dynamic> sessions = documentSnapshot.get("Sessions");
       for (final element in sessions) {
         ActivityData currentActivityData;
-        String currentSessionDate = dateFormat.format(element["Timestamp"].toDate()).toString();
+        String currentSessionDate =
+            dateFormat.format(element["Timestamp"].toDate()).toString();
         List<TshirtData> dataList = [];
         for (final dataPoint in element["Data"]) {
           var stringArr = dataPoint.split(" ");
