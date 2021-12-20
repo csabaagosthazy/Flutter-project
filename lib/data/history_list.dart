@@ -7,6 +7,10 @@ import 'activity_data.dart';
 
 /// This is the stateful widget that Activity instantiates.
 class HistoryList extends StatefulWidget {
+
+  HistoryList({this.clickActivityButton, this.clickCloseButton});
+  var clickActivityButton;
+  var clickCloseButton;
   @override
   _HistoryListState createState() => _HistoryListState();
 }
@@ -30,6 +34,7 @@ class _HistoryListState extends State<HistoryList> {
   ///
   /// activity : activity to display
   void displayLastActivity(Widget activity) {
+    widget.clickActivityButton();
     setState(() {
       isDisplayedOldActivity = true;
       oldActivity = activity;
@@ -57,6 +62,7 @@ class _HistoryListState extends State<HistoryList> {
     if(isDisplayedOldActivity){
       return Column(children: [
         ElevatedButton(onPressed: (){
+          widget.clickCloseButton();
           setState(() {
             isDisplayedOldActivity = false;
           });
@@ -85,7 +91,7 @@ class _HistoryListState extends State<HistoryList> {
         items.add(Expanded(
             child: ActivityItem(
             data: historyActivity![historyActivity!.length - 1 - i],
-          onClick: displayLastActivity,
+            onClick: displayLastActivity,
         )));
       }
       design = Container(child: Column(children: items));

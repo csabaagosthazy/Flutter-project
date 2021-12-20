@@ -8,7 +8,6 @@ class ActivityItem extends StatelessWidget {
   ActivityItem(
       {Key? key,
       required this.data,
-
       this.onClick})
       : super(key: key);
 

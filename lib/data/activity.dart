@@ -13,11 +13,13 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 /// This is the stateful widget that MainPage instantiates.
 class Activity extends StatefulWidget {
-  final bool canStart;
+  bool canStart;
+  bool displayHistory;
   late List<TshirtData> history;
 
-  Activity({List<TshirtData>? history, this.canStart = false}) {
+  Activity({List<TshirtData>? history,this.displayHistory=false, this.canStart = false}) {
     this.history = history ?? List.empty(growable: true);
+    displayHistory = this.canStart;
   }
 
   @override
@@ -139,6 +141,18 @@ class _ActivityState extends State<Activity> {
         seconds.toString();
   }
 
+  void hideStartButton(){
+    setState(() {
+      widget.canStart = false;
+    });
+  }
+
+  void displayStartButton(){
+    setState(() {
+      widget.canStart = true;
+    });
+  }
+
   ///Call when the activity is start
   void startActivity() {
     if(isStarted) {
@@ -152,7 +166,7 @@ class _ActivityState extends State<Activity> {
       Future<dynamic> res = conn.getData();
       //res.then((value) => {value.map((e) => data + " " + e)});
       res.then((value) => data = value).catchError((error, stackTrace) {
-        textConnectedTshirt = "T-shirt disconnected";
+        textConnectedTshirt = "Disconnected";
         if (history.length >= 3) {
           DbService db = DbService();
           db.saveSession("2", history);
@@ -176,7 +190,7 @@ class _ActivityState extends State<Activity> {
           humidityTitle = history.last.humidity.toString();
           temperatureTitle = history.last.temperature.toString();
           textConnectedTshirt =
-              "T-shirt connected! (" + history.last.time + ")";
+              "Connected!";
         }
       });
     });
@@ -223,8 +237,8 @@ class _ActivityState extends State<Activity> {
   Widget build(BuildContext context) {
     List<Widget> underButton = List.empty(growable: true);
 
-    if (widget.canStart && !isStarted) {
-     underButton.add(Expanded(flex: 3, child: HistoryList()));
+    if ((widget.canStart || widget.displayHistory) && !isStarted) {
+     underButton.add(Expanded(flex: 3, child: HistoryList(clickActivityButton: hideStartButton, clickCloseButton: displayStartButton)));
     } else {
       underButton.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -273,7 +287,8 @@ class _ActivityState extends State<Activity> {
     Visibility(
     visible: widget.canStart,
         child:Row(children: [
-            Center(child: Text(textConnectedTshirt)),
+          Expanded(child: Center(child: Text(textConnectedTshirt)),)
+            ,
             ElevatedButton(
                 onPressed: () {
                   if (isStarted && history.length >= 3) {
