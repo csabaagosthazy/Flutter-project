@@ -9,6 +9,7 @@ import 'package:flutter_group2_tshirt_project/connection/tshirt_connection.dart'
 import 'package:flutter_group2_tshirt_project/data/history_list.dart';
 import 'package:flutter_group2_tshirt_project/data/tshirt_data.dart';
 import 'package:flutter_group2_tshirt_project/db_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 /// This is the stateful widget that MainPage instantiates.
@@ -32,7 +33,7 @@ class _ActivityState extends State<Activity> {
   late List<TshirtData> history;
 
   TshirtConnection conn =
-  TshirtConnection(url: 'https://tshirtserver.herokuapp.com/');
+      TshirtConnection(url: 'https://tshirtserver.herokuapp.com/');
   Timer? timer;
   String heartFrequencyTitle = "";
   String humidityTitle = "";
@@ -155,7 +156,7 @@ class _ActivityState extends State<Activity> {
 
   ///Call when the activity is start
   void startActivity() {
-    if(isStarted) {
+    if (isStarted) {
       return;
     }
     TshirtData? data;
@@ -198,7 +199,7 @@ class _ActivityState extends State<Activity> {
 
   ///Call when the activity is stop
   void stopActivity() {
-    if(!isStarted) {
+    if (!isStarted) {
       return;
     }
     timer!.cancel();
@@ -250,7 +251,7 @@ class _ActivityState extends State<Activity> {
                   fun: changeLineChartBasedOnValue,
                   value: heartFrequencyTitle,
                   icon:
-                  const Icon(MdiIcons.heart, color: Colors.red, size: 75))),
+                      const Icon(MdiIcons.heart, color: Colors.red, size: 75))),
           Expanded(
               flex: 3,
               child: InfoCard(
@@ -271,16 +272,13 @@ class _ActivityState extends State<Activity> {
       ));
       underButton.add(Text(
         _data,
-        style: Theme
-            .of(context)
-            .textTheme
-            .headline4,
+        style: Theme.of(context).textTheme.headline4,
       ));
       underButton.add(Expanded(
           child: Linechart(
-            indicator: indicator,
-            data: listOfValuesWithTime(indicator),
-          )));
+        indicator: indicator,
+        data: listOfValuesWithTime(indicator),
+      )));
     }
 
     return  Column(children: <Widget>[
@@ -298,12 +296,32 @@ class _ActivityState extends State<Activity> {
                   } else {
                     startActivity();
                   }
-                }
-                ,
-                child: isStarted ? const Text("Stop activity") : const Text(
-                    "Start activity")),
+                },
+                style: TextButton.styleFrom(
+                    backgroundColor: isStarted ? Colors.red : Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 40),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0))),
+                child: Text(
+                  isStarted ? "Stop activity" : "Start Activity",
+                  style: GoogleFonts.heebo(
+                    color: Colors.white,
+                    letterSpacing: 0.5,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
+            const SizedBox(
+              height: 10,
+            ),
+
+            /*
+                child: isStarted
+                    ? const Text("Stop activity")
+                    : const Text("Start activity")),*/
           ])),
-          ...underButton
-        ]);
+      ...underButton
+    ]);
   }
 }
