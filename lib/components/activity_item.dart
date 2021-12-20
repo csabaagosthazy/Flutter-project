@@ -24,7 +24,7 @@ class ActivityItem extends StatelessWidget {
         },
         child: Row(
           children: <Widget>[
-            Text(data.activityDate + " " + data.listTshirtData.last.time),
+            Text("Activity of "+ data.activityDate + ", duration:  " + data.listTshirtData.last.time),
           ],
         ),
       ),

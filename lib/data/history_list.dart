@@ -85,9 +85,10 @@ class _HistoryListState extends State<HistoryList> {
         child: Text("No data to show"),
       ));
     } else {
-      //Display only the last 3 activities
+      //Display only the last 5 activities
       List<Widget> items = List.empty(growable: true);
-      for (int i = 0; i < min(3, historyActivity!.length); i++) {
+      items.add(Text("List of activities: "));
+      for (int i = 0; i < min(5, historyActivity!.length); i++) {
         items.add(Expanded(
             child: ActivityItem(
             data: historyActivity![historyActivity!.length - 1 - i],
