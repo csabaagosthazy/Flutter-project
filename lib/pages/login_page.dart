@@ -55,7 +55,9 @@ class _LoginPageState extends State<LoginPage> {
   //CHECK password and user
   void checkLoginOfUser() {
     setState(() => _submitted = true);
-
+    if(_errorEmail != null){
+      return;
+    }
     email = controllerEmail.text;
     password = controllerPassword.text;
     print(email);

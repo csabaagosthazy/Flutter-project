@@ -68,8 +68,11 @@ class _SignupState extends State<Signup> {
     });
     return isPasswordInvisible;
   }
-  void submitted(){
+  void signUp(){
     setState(() => _submitted = true);
+    if(_errorFirstname != null || _errorLastname != null || _errorEmail != null || _errorPassword != null || _errorPasswordConfirmation != null){
+      return;
+    }
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => const HomePage()),
     );
@@ -115,7 +118,7 @@ class _SignupState extends State<Signup> {
               isPasswordInvisible: isPasswordInvisible,
               changePasswordVisibility: changePasswordVisibility,
               controller: firstnameController,
-              errorText: _errorFirstname,
+              errorText: _submitted ? _errorFirstname : null,
             ),
             InputLoginField(
               hintText: "Lastname",
@@ -128,7 +131,7 @@ class _SignupState extends State<Signup> {
               isPasswordInvisible: isPasswordInvisible,
               changePasswordVisibility: changePasswordVisibility,
               controller: lastnameController,
-              errorText: _errorLastname,
+              errorText: _submitted ? _errorLastname : null,
 
             ),
             InputLoginField(
@@ -142,7 +145,7 @@ class _SignupState extends State<Signup> {
               isPasswordInvisible: isPasswordInvisible,
               changePasswordVisibility: changePasswordVisibility,
               controller: emailController,
-              errorText: _errorEmail,
+              errorText: _submitted ? _errorEmail : null,
 
             ),
             InputLoginField(
@@ -156,7 +159,7 @@ class _SignupState extends State<Signup> {
               isPasswordInvisible: isPasswordInvisible,
               changePasswordVisibility: changePasswordVisibility,
               controller: passwordController,
-              errorText: _errorPassword,
+              errorText: _submitted ? _errorPassword : null,
 
             ),
             InputLoginField(
@@ -170,13 +173,13 @@ class _SignupState extends State<Signup> {
               isPasswordInvisible: isPasswordInvisible,
               changePasswordVisibility: changePasswordVisibility,
               controller: passwordConfirmationController,
-              errorText: _errorPasswordConfirmation,
+              errorText: _submitted ? _errorPasswordConfirmation : null,
 
             ),
             const SizedBox(height: 30),
             ElevatedButton(
                 onPressed: () {
-
+                  signUp();
                 },
                 child: Text(
                   "SIGN UP",
