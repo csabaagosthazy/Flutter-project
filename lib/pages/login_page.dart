@@ -3,6 +3,7 @@ import 'package:flutter_group2_tshirt_project/components/profile.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_group2_tshirt_project/components/login_field.dart';
 
+import '../validation.dart';
 import 'signup_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -28,6 +29,8 @@ class _LoginPageState extends State<LoginPage> {
 //could be null in the beggining
   Profile? selectedField;
 
+  bool _submitted = false;
+
   Color setColorField(Profile f) {
     return selectedField == f ? enabledFieldColor : disabledFieldColor;
   }
@@ -51,6 +54,8 @@ class _LoginPageState extends State<LoginPage> {
 
   //CHECK password and user
   void checkLoginOfUser() {
+    setState(() => _submitted = true);
+
     email = controllerEmail.text;
     password = controllerPassword.text;
     print(email);
@@ -59,8 +64,13 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
+    controllerEmail.dispose();
+    controllerPassword.dispose();
     super.dispose();
     //  controller.dispose();
+  }
+  String? get _errorEmail{
+    return errorEmail(controllerEmail);
   }
 
   @override
@@ -108,6 +118,8 @@ class _LoginPageState extends State<LoginPage> {
             isPassword: false,
             isPasswordInvisible: isPasswordInvisible,
             changePasswordVisibility: changePasswordVisibility,
+            controller: controllerEmail,
+            errorText: _submitted ?_errorEmail:null,
           ),
           InputLoginField(
             hintText: "Password",
@@ -119,6 +131,7 @@ class _LoginPageState extends State<LoginPage> {
             isPassword: true,
             isPasswordInvisible: isPasswordInvisible,
             changePasswordVisibility: changePasswordVisibility,
+            controller: controllerPassword,
           ),
           const SizedBox(height: 20),
           ElevatedButton(

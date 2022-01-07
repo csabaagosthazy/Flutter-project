@@ -4,6 +4,8 @@ import 'package:flutter_group2_tshirt_project/pages/home_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_group2_tshirt_project/components/login_field.dart';
 
+import '../validation.dart';
+
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
 
@@ -13,14 +15,38 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   bool isPasswordInvisible = true;
+  bool _submitted = false;
 
   final Color enabledFieldColor = Colors.white;
   final Color disabledFieldColor = const Color(0xFFD3D3D3);
   final Color enabledTextColor = const Color(0xFF9B5EF7);
   final Color disabledTextColor = const Color(0xFF9B5EF7);
 
+  final firstnameController = TextEditingController();
+  final lastnameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final passwordConfirmationController = TextEditingController();
+
 //could be null in the beggining
   Profile? selectedField;
+
+  String? get _errorFirstname{
+    return errorText(firstnameController);
+  }
+
+  String? get _errorLastname{
+    return errorText(lastnameController);
+  }
+  String? get _errorEmail{
+    return errorEmail(emailController);
+  }
+  String? get _errorPassword{
+    return errorPassword(passwordController);
+  }
+  String? get _errorPasswordConfirmation{
+    return errorPasswordConfirmation(passwordConfirmationController, passwordController);
+  }
 
   Color setColorField(Profile f) {
     return selectedField == f ? enabledFieldColor : disabledFieldColor;
@@ -42,6 +68,13 @@ class _SignupState extends State<Signup> {
     });
     return isPasswordInvisible;
   }
+  void submitted(){
+    setState(() => _submitted = true);
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const HomePage()),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +114,8 @@ class _SignupState extends State<Signup> {
               isPassword: false,
               isPasswordInvisible: isPasswordInvisible,
               changePasswordVisibility: changePasswordVisibility,
+              controller: firstnameController,
+              errorText: _errorFirstname,
             ),
             InputLoginField(
               hintText: "Lastname",
@@ -92,6 +127,9 @@ class _SignupState extends State<Signup> {
               isPassword: false,
               isPasswordInvisible: isPasswordInvisible,
               changePasswordVisibility: changePasswordVisibility,
+              controller: lastnameController,
+              errorText: _errorLastname,
+
             ),
             InputLoginField(
               hintText: "Email",
@@ -103,6 +141,9 @@ class _SignupState extends State<Signup> {
               isPassword: false,
               isPasswordInvisible: isPasswordInvisible,
               changePasswordVisibility: changePasswordVisibility,
+              controller: emailController,
+              errorText: _errorEmail,
+
             ),
             InputLoginField(
               hintText: "Password",
@@ -114,6 +155,9 @@ class _SignupState extends State<Signup> {
               isPassword: true,
               isPasswordInvisible: isPasswordInvisible,
               changePasswordVisibility: changePasswordVisibility,
+              controller: passwordController,
+              errorText: _errorPassword,
+
             ),
             InputLoginField(
               hintText: "Confirm Password",
@@ -125,13 +169,14 @@ class _SignupState extends State<Signup> {
               isPassword: true,
               isPasswordInvisible: isPasswordInvisible,
               changePasswordVisibility: changePasswordVisibility,
+              controller: passwordConfirmationController,
+              errorText: _errorPasswordConfirmation,
+
             ),
             const SizedBox(height: 30),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
+
                 },
                 child: Text(
                   "SIGN UP",
