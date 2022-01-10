@@ -2,12 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/components/activity_item.dart';
-import '../db_service.dart';
+import '../services/db_service.dart';
 import 'activity_data.dart';
 
 /// This is the stateful widget that Activity instantiates.
 class HistoryList extends StatefulWidget {
-
   HistoryList({this.clickActivityButton, this.clickCloseButton});
   var clickActivityButton;
   var clickCloseButton;
@@ -54,28 +53,36 @@ class _HistoryListState extends State<HistoryList> {
   @override
   Widget build(BuildContext context) {
     //Display a message if there is no connection
-    if(!isConnectedToInternet){
-      return const Center(child: Text("Could not retrieve the data because you are not connected to Internet."),);
+    if (!isConnectedToInternet) {
+      return const Center(
+        child: Text(
+            "Could not retrieve the data because you are not connected to Internet."),
+      );
     }
 
     //display an activity
-    if(isDisplayedOldActivity){
-      return Column(children: [
-        ElevatedButton(onPressed: (){
-          widget.clickCloseButton();
-          setState(() {
-            isDisplayedOldActivity = false;
-          });
-        }, child: Text("Close")),
-        Expanded(child: oldActivity,)
-
-      ],);
+    if (isDisplayedOldActivity) {
+      return Column(
+        children: [
+          ElevatedButton(
+              onPressed: () {
+                widget.clickCloseButton();
+                setState(() {
+                  isDisplayedOldActivity = false;
+                });
+              },
+              child: Text("Close")),
+          Expanded(
+            child: oldActivity,
+          )
+        ],
+      );
     }
 
     var design;
     // Wait because it is not loaded
     if (historyActivity == null) {
-      design =  const Center(
+      design = const Center(
         child: Text("Wait for a moment !"),
       );
       // No data
@@ -91,8 +98,8 @@ class _HistoryListState extends State<HistoryList> {
       for (int i = 0; i < min(5, historyActivity!.length); i++) {
         items.add(Expanded(
             child: ActivityItem(
-            data: historyActivity![historyActivity!.length - 1 - i],
-            onClick: displayLastActivity,
+          data: historyActivity![historyActivity!.length - 1 - i],
+          onClick: displayLastActivity,
         )));
       }
       design = Container(child: Column(children: items));

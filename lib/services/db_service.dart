@@ -4,8 +4,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-import 'data/activity_data.dart';
-import 'data/tshirt_data.dart';
+import '../data/activity_data.dart';
+import '../data/tshirt_data.dart';
 
 // Cloud firestore database class
 class DbService {
