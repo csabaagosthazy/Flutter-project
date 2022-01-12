@@ -16,20 +16,21 @@ class AuthService {
   ///password: user password
   ///
   ///Returns registration success
-  Future<bool> register(
+  Future<User?> register(
       String email, String firstName, String lastName, String password) async {
-    bool registrationSuccess = false;
-    final User? user = (await auth.createUserWithEmailAndPassword(
-            email: email, password: password))
-        .user;
+    User? user;
+
+    UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    user = userCredential.user;
 
     if (user != null) {
-      db
-          .createUser(user.uid, firstName, lastName)
-          .then((_) => registrationSuccess = true);
+      db.createUser(user.uid, firstName, lastName);
     }
 
-    return registrationSuccess;
+    return user;
   }
 
   ///Sign-in process
@@ -40,11 +41,15 @@ class AuthService {
   ///
   ///Returns User?
   Future<User?> signIn(String email, String password) async {
-    return (await auth.signInWithEmailAndPassword(
+    User? user;
+
+    UserCredential userCredential = await auth.signInWithEmailAndPassword(
       email: email,
       password: password,
-    ))
-        .user!;
+    );
+    user = userCredential.user;
+
+    return user;
   }
 
   ///Sign-out process
