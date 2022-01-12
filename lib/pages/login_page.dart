@@ -58,10 +58,13 @@ class _LoginPageState extends State<LoginPage> {
     if(_errorEmail != null){
       return;
     }
+
     email = controllerEmail.text;
     password = controllerPassword.text;
     print(email);
     print(password);
+    //TODO: Login to firebase
+
   }
 
   @override

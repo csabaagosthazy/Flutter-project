@@ -12,7 +12,7 @@ String? errorText(TextEditingController controller) {
 
 String? errorEmail(TextEditingController controller){
   final text = controller.value.text;
-  print("SOS" + controller.value.toString());
+
   if (text.isEmpty) {
     return 'Can\'t be empty';
   }
