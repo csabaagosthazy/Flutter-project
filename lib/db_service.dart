@@ -71,11 +71,11 @@ class DbService {
   ///data: Session data list
   ///
   ///Returns a List of Tshirt data list
-  Future<List<List<TshirtData>>> getDataByUserAndDate(
+  Future<List<ActivityData>> getDataByUserAndDate(
       String userId, DateTime date) async {
     DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+    List<ActivityData> result = [];
 
-    List<List<TshirtData>> result = [];
     DocumentSnapshot documentSnapshot = await users.doc(userId).get();
     //if user exist
     if (documentSnapshot.exists) {
@@ -84,7 +84,6 @@ class DbService {
       List<dynamic> sessions = documentSnapshot.get("Sessions");
       for (final element in sessions) {
         //check if the date is matching
-
         String currentSessionDate =
             dateFormat.format(element["Timestamp"].toDate()).toString();
 
@@ -96,13 +95,13 @@ class DbService {
             var stringArr = dataPoint.split(" ");
             TshirtData data = TshirtData(
                 time: stringArr[0],
-                heartFrequency: stringArr[1],
-                temperature: stringArr[2],
-                humidity: stringArr[3]);
+                heartFrequency: int.parse(stringArr[1]),
+                temperature: int.parse(stringArr[2]),
+                humidity: int.parse(stringArr[3]));
             dataList.add(data);
-          }
 
-          result.add(dataList);
+          }
+          result.add(ActivityData(dataList, currentSessionDate));
         }
       }
     }

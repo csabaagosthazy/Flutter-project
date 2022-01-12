@@ -7,19 +7,26 @@ import 'activity_data.dart';
 
 /// This is the stateful widget that Activity instantiates.
 class HistoryList extends StatefulWidget {
+  HistoryList(
+      {this.displayRecentActivity,
+      this.historyActivity,
+      this.clickActivityButton,
+      this.clickCloseButton});
 
-  HistoryList({this.clickActivityButton, this.clickCloseButton});
   var clickActivityButton;
   var clickCloseButton;
+  var displayRecentActivity;
+  List<ActivityData>? historyActivity;
+
   @override
   _HistoryListState createState() => _HistoryListState();
 }
 
 class _HistoryListState extends State<HistoryList> {
-  List<ActivityData>? historyActivity;
   bool isDisplayedOldActivity = false;
   bool isConnectedToInternet = true;
   late Widget oldActivity;
+  List<ActivityData>? historyActivity;
 
   ///Retrieve data from db for the current user
   ///
@@ -34,48 +41,64 @@ class _HistoryListState extends State<HistoryList> {
   ///
   /// activity : activity to display
   void displayLastActivity(Widget activity) {
-    widget.clickActivityButton();
+    if (widget.clickActivityButton != null) {
+      widget.clickActivityButton();
+    }
     setState(() {
       isDisplayedOldActivity = true;
       oldActivity = activity;
     });
   }
 
+  void closeActivity() {
+    if (widget.clickCloseButton != null) {
+      widget.clickCloseButton();
+    }
+    setState(() {
+      isDisplayedOldActivity = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    getDataFromDb().then((value) => {
-          setState(() {
-            historyActivity = value;
-          })
-        });
+    if (widget.displayRecentActivity) {
+      getDataFromDb().then((value) => {
+            setState(() {
+              historyActivity = value;
+            })
+          });
+    } else {
+      historyActivity = widget.historyActivity;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     //Display a message if there is no connection
-    if(!isConnectedToInternet){
-      return const Center(child: Text("Could not retrieve the data because you are not connected to Internet."),);
+    if (!isConnectedToInternet) {
+      return const Center(
+        child: Text(
+            "Could not retrieve the data because you are not connected to Internet."),
+      );
     }
 
     //display an activity
-    if(isDisplayedOldActivity){
-      return Column(children: [
-        ElevatedButton(onPressed: (){
-          widget.clickCloseButton();
-          setState(() {
-            isDisplayedOldActivity = false;
-          });
-        }, child: Text("Close")),
-        Expanded(child: oldActivity,)
-
-      ],);
+    if (isDisplayedOldActivity) {
+      return Column(
+        children: [
+          ElevatedButton(onPressed: closeActivity, child: Text("Close")),
+          Expanded(
+            child: oldActivity,
+          )
+        ],
+      );
     }
 
     var design;
     // Wait because it is not loaded
     if (historyActivity == null) {
-      design =  const Center(
+      design = const Center(
         child: Text("Wait for a moment !"),
       );
       // No data
@@ -91,8 +114,8 @@ class _HistoryListState extends State<HistoryList> {
       for (int i = 0; i < min(5, historyActivity!.length); i++) {
         items.add(Expanded(
             child: ActivityItem(
-            data: historyActivity![historyActivity!.length - 1 - i],
-            onClick: displayLastActivity,
+          data: historyActivity![historyActivity!.length - 1 - i],
+          onClick: displayLastActivity,
         )));
       }
       design = Container(child: Column(children: items));

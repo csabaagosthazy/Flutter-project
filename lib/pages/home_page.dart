@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group2_tshirt_project/pages/calendar_page.dart';
 import 'package:flutter_group2_tshirt_project/pages/main_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,10 +15,7 @@ class _HomePageState extends State<HomePage> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     MainPage(),
-    Text(
-      'Index 2: Calendar',
-      style: optionStyle,
-    ),
+    CalendarPage(),
     Text(
       'Index 3: Profile',
       style: optionStyle,

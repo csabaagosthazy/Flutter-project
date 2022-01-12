@@ -235,11 +235,17 @@ class _ActivityState extends State<Activity> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    stopActivity();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<Widget> underButton = List.empty(growable: true);
 
     if ((widget.canStart || widget.displayHistory) && !isStarted) {
-     underButton.add(Expanded(flex: 3, child: HistoryList(clickActivityButton: hideStartButton, clickCloseButton: displayStartButton)));
+     underButton.add(Expanded(flex: 3, child: HistoryList(displayRecentActivity: true, clickActivityButton: hideStartButton, clickCloseButton: displayStartButton)));
     } else {
       underButton.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
