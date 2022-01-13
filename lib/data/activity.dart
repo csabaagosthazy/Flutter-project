@@ -175,11 +175,15 @@ class _ActivityState extends State<Activity> {
         if (history.length >= 3) {
           DbService db = DbService();
           AuthService auth = AuthService();
-          auth.getCurrentUser().then((user) => {
-                if (user != null) {db.saveSession(user.uid, history)}
-              });
+          auth.getCurrentUser().then((user) {
+            if (user != null) {
+              db.saveSession(user.uid, history);
+            }
+            stopActivity();
+          });
+        } else {
+          stopActivity();
         }
-        stopActivity();
       });
 
       setState(() {
@@ -306,13 +310,14 @@ class _ActivityState extends State<Activity> {
               child: Center(child: Text(textConnectedTshirt)),
             ),
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (isStarted && history.length >= 3) {
                     DbService db = DbService();
                     AuthService auth = AuthService();
-                    auth.getCurrentUser().then((user) => {
-                      if (user != null) {db.saveSession(user.uid, history)}
-                    });
+                    var user = await auth.getCurrentUser();
+                    if (user != null) {
+                      db.saveSession(user.uid, history);
+                    }
                     stopActivity();
                   } else {
                     startActivity();

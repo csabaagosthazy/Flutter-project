@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group2_tshirt_project/components/login_field.dart';
 import 'package:flutter_group2_tshirt_project/components/profile.dart';
-import 'package:flutter_group2_tshirt_project/pages/home_page.dart';
+import 'package:flutter_group2_tshirt_project/pages/welcome_screens.dart';
 import 'package:flutter_group2_tshirt_project/services/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_group2_tshirt_project/components/login_field.dart';
 
 import '../validation.dart';
 
@@ -32,21 +32,25 @@ class _SignupState extends State<Signup> {
 //could be null in the beggining
   Profile? selectedField;
 
-  String? get _errorFirstname{
+  String? get _errorFirstname {
     return errorText(firstnameController);
   }
 
-  String? get _errorLastname{
+  String? get _errorLastname {
     return errorText(lastnameController);
   }
-  String? get _errorEmail{
+
+  String? get _errorEmail {
     return errorEmail(emailController);
   }
-  String? get _errorPassword{
+
+  String? get _errorPassword {
     return errorPassword(passwordController);
   }
-  String? get _errorPasswordConfirmation{
-    return errorPasswordConfirmation(passwordConfirmationController, passwordController);
+
+  String? get _errorPasswordConfirmation {
+    return errorPasswordConfirmation(
+        passwordConfirmationController, passwordController);
   }
 
   Color setColorField(Profile f) {
@@ -69,22 +73,26 @@ class _SignupState extends State<Signup> {
     });
     return isPasswordInvisible;
   }
+
   Future<void> signUp() async {
     setState(() => _submitted = true);
-    if(_errorFirstname != null || _errorLastname != null || _errorEmail != null || _errorPassword != null || _errorPasswordConfirmation != null){
+    if (_errorFirstname != null ||
+        _errorLastname != null ||
+        _errorEmail != null ||
+        _errorPassword != null ||
+        _errorPasswordConfirmation != null) {
       return;
     }
     AuthService auth = AuthService();
 
     //TODO: Add 3 pages presentation
-    await auth.register(emailController.text, firstnameController.text, lastnameController.text, passwordController.text)
-    .then((user) =>
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      )
-    );
+    await auth
+        .register(emailController.text, firstnameController.text,
+            lastnameController.text, passwordController.text)
+        .then((user) => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const WelcomeScreens()),
+            ));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +147,6 @@ class _SignupState extends State<Signup> {
               changePasswordVisibility: changePasswordVisibility,
               controller: lastnameController,
               errorText: _submitted ? _errorLastname : null,
-
             ),
             InputLoginField(
               hintText: "Email",
@@ -153,7 +160,6 @@ class _SignupState extends State<Signup> {
               changePasswordVisibility: changePasswordVisibility,
               controller: emailController,
               errorText: _submitted ? _errorEmail : null,
-
             ),
             InputLoginField(
               hintText: "Password",
@@ -167,7 +173,6 @@ class _SignupState extends State<Signup> {
               changePasswordVisibility: changePasswordVisibility,
               controller: passwordController,
               errorText: _submitted ? _errorPassword : null,
-
             ),
             InputLoginField(
               hintText: "Confirm Password",
@@ -181,7 +186,6 @@ class _SignupState extends State<Signup> {
               changePasswordVisibility: changePasswordVisibility,
               controller: passwordConfirmationController,
               errorText: _submitted ? _errorPasswordConfirmation : null,
-
             ),
             const SizedBox(height: 30),
             ElevatedButton(
