@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/components/activity_item.dart';
+
 import '../db_service.dart';
 import 'activity_data.dart';
 
@@ -34,7 +33,7 @@ class _HistoryListState extends State<HistoryList> {
   Future<List<ActivityData>> getDataFromDb() async {
     DbService db = DbService();
     //TODO: change 2 with the current user when login is done
-    return await db.getDataByUser("2");
+    return await db.getDataByUser("2", 10);
   }
 
   ///Display the activity given in parms
@@ -50,6 +49,7 @@ class _HistoryListState extends State<HistoryList> {
     });
   }
 
+  ///Close the calendar
   void closeActivity() {
     if (widget.clickCloseButton != null) {
       widget.clickCloseButton();
@@ -68,8 +68,6 @@ class _HistoryListState extends State<HistoryList> {
               historyActivity = value;
             })
           });
-    } else {
-      historyActivity = widget.historyActivity;
     }
   }
 
@@ -82,12 +80,14 @@ class _HistoryListState extends State<HistoryList> {
             "Could not retrieve the data because you are not connected to Internet."),
       );
     }
-
+    if (!widget.displayRecentActivity) {
+      historyActivity = widget.historyActivity;
+    }
     //display an activity
     if (isDisplayedOldActivity) {
       return Column(
         children: [
-          ElevatedButton(onPressed: closeActivity, child: Text("Close")),
+          ElevatedButton(onPressed: closeActivity, child: const Text("Close")),
           Expanded(
             child: oldActivity,
           )
@@ -110,15 +110,20 @@ class _HistoryListState extends State<HistoryList> {
     } else {
       //Display only the last 5 activities
       List<Widget> items = List.empty(growable: true);
-      items.add(Text("List of activities: "));
-      for (int i = 0; i < min(5, historyActivity!.length); i++) {
-        items.add(Expanded(
-            child: ActivityItem(
+      items.add(const Center(child: Text("List of activities: ", style: TextStyle(fontSize: 20,),)),);
+      for (int i = 0; i < historyActivity!.length; i++) {
+        items.add(ActivityItem(
           data: historyActivity![historyActivity!.length - 1 - i],
           onClick: displayLastActivity,
-        )));
+        ));
       }
-      design = Container(child: Column(children: items));
+      // design = Container(child: Column(children: items));
+      design = ListView.builder  (
+          itemCount: items.length,
+          itemBuilder: (BuildContext ctxt, int index) {
+            return items[index];
+          }
+      );
     }
     return design;
   }

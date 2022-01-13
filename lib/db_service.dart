@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls
 
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
@@ -99,7 +100,6 @@ class DbService {
                 temperature: int.parse(stringArr[2]),
                 humidity: int.parse(stringArr[3]));
             dataList.add(data);
-
           }
           result.add(ActivityData(dataList, currentSessionDate));
         }
@@ -115,7 +115,7 @@ class DbService {
   ///data: Session data list
   ///
   ///Returns a List of activity data
-  Future<List<ActivityData>> getDataByUser(String userId) async {
+  Future<List<ActivityData>> getDataByUser(String userId, [int numberActivity=-1]) async {
     DateFormat dateFormat = DateFormat('yyyy-MM-dd');
     List<ActivityData> result = [];
     DocumentSnapshot documentSnapshot = await users.doc(userId).get();
@@ -123,7 +123,13 @@ class DbService {
     if (documentSnapshot.exists) {
       //get user sessions
       List<dynamic> sessions = documentSnapshot.get("Sessions");
-      for (final element in sessions) {
+
+      int numberData = sessions.length;
+      if(numberActivity >= 0){
+        numberData = numberActivity;
+      }
+      for(int idx=0; idx < numberData; idx++){
+        final element = sessions[idx];
         ActivityData currentActivityData;
         String currentSessionDate =
             dateFormat.format(element["Timestamp"].toDate()).toString();
