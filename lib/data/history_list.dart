@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/components/activity_item.dart';
+import 'package:flutter_group2_tshirt_project/services/auth_service.dart';
 import '../services/db_service.dart';
 import 'activity_data.dart';
 
@@ -33,8 +35,13 @@ class _HistoryListState extends State<HistoryList> {
   ///Returns a List of activity data
   Future<List<ActivityData>> getDataFromDb() async {
     DbService db = DbService();
-    //TODO: change 2 with the current user when login is done
-    return await db.getDataByUser("2");
+    AuthService auth = AuthService();
+    User? user = await auth.getCurrentUser();
+    if(user == null){
+      return [];
+    }
+
+    return await db.getDataByUser(user.uid);
   }
 
   ///Display the activity given in parms

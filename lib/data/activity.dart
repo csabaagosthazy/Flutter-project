@@ -8,6 +8,7 @@ import 'package:flutter_group2_tshirt_project/components/line_chart.dart';
 import 'package:flutter_group2_tshirt_project/connection/tshirt_connection.dart';
 import 'package:flutter_group2_tshirt_project/data/history_list.dart';
 import 'package:flutter_group2_tshirt_project/data/tshirt_data.dart';
+import 'package:flutter_group2_tshirt_project/services/auth_service.dart';
 import 'package:flutter_group2_tshirt_project/services/db_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -173,7 +174,10 @@ class _ActivityState extends State<Activity> {
         textConnectedTshirt = "Disconnected";
         if (history.length >= 3) {
           DbService db = DbService();
-          db.saveSession("2", history);
+          AuthService auth = AuthService();
+          auth.getCurrentUser().then((user) => {
+                if (user != null) {db.saveSession(user.uid, history)}
+              });
         }
         stopActivity();
       });
@@ -247,7 +251,12 @@ class _ActivityState extends State<Activity> {
     List<Widget> underButton = List.empty(growable: true);
 
     if ((widget.canStart || widget.displayHistory) && !isStarted) {
-     underButton.add(Expanded(flex: 3, child: HistoryList(displayRecentActivity: true, clickActivityButton: hideStartButton, clickCloseButton: displayStartButton)));
+      underButton.add(Expanded(
+          flex: 3,
+          child: HistoryList(
+              displayRecentActivity: true,
+              clickActivityButton: hideStartButton,
+              clickCloseButton: displayStartButton)));
     } else {
       underButton.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -300,7 +309,10 @@ class _ActivityState extends State<Activity> {
                 onPressed: () {
                   if (isStarted && history.length >= 3) {
                     DbService db = DbService();
-                    db.saveSession("2", history);
+                    AuthService auth = AuthService();
+                    auth.getCurrentUser().then((user) => {
+                      if (user != null) {db.saveSession(user.uid, history)}
+                    });
                     stopActivity();
                   } else {
                     startActivity();

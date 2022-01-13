@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/components/profile.dart';
+import 'package:flutter_group2_tshirt_project/services/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_group2_tshirt_project/components/login_field.dart';
 
 import '../validation.dart';
+import 'home_page.dart';
 import 'signup_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -59,12 +61,15 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    email = controllerEmail.text;
-    password = controllerPassword.text;
-    print(email);
-    print(password);
-    //TODO: Login to firebase
+    AuthService auth = AuthService();
 
+    //TODO: Login to firebase
+    auth.signIn(controllerEmail.text, controllerPassword.text)
+        .then((user) =>
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const HomePage()),
+        )
+    );
   }
 
   @override

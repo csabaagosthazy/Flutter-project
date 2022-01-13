@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/components/profile.dart';
 import 'package:flutter_group2_tshirt_project/pages/home_page.dart';
+import 'package:flutter_group2_tshirt_project/services/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_group2_tshirt_project/components/login_field.dart';
 
@@ -68,13 +69,19 @@ class _SignupState extends State<Signup> {
     });
     return isPasswordInvisible;
   }
-  void signUp(){
+  Future<void> signUp() async {
     setState(() => _submitted = true);
     if(_errorFirstname != null || _errorLastname != null || _errorEmail != null || _errorPassword != null || _errorPasswordConfirmation != null){
       return;
     }
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const HomePage()),
+    AuthService auth = AuthService();
+
+    //TODO: Add 3 pages presentation
+    await auth.register(emailController.text, firstnameController.text, lastnameController.text, passwordController.text)
+    .then((user) =>
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      )
     );
   }
 
