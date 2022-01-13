@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Welcome to our App'),
+        title: const Text('Smart T-shirt App'),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
