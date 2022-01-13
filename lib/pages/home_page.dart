@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/pages/main_page.dart';
+import 'package:flutter_group2_tshirt_project/pages/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,10 +19,7 @@ class _HomePageState extends State<HomePage> {
       'Index 2: Calendar',
       style: optionStyle,
     ),
-    Text(
-      'Index 3: Profile',
-      style: optionStyle,
-    ),
+    ProfilePage(),
     Text(
       'Index 4: Settings',
       style: optionStyle,
@@ -53,12 +51,12 @@ class _HomePageState extends State<HomePage> {
           const BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today_rounded),
             label: 'Calendar',
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.orange,
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
-            backgroundColor: Colors.orange,
+            backgroundColor: Color(0xFFEB5C6D),
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.settings),
