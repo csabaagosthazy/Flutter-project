@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_group2_tshirt_project/pages/about_page.dart';
 import 'package:flutter_group2_tshirt_project/pages/welcome_screens.dart';
 import 'package:flutter_group2_tshirt_project/pages/profile_page.dart';
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group2_tshirt_project/pages/about_page.dart';
 import 'package:flutter_group2_tshirt_project/pages/main_page.dart';
 import 'package:flutter_group2_tshirt_project/pages/profile_page.dart';
 
@@ -20,10 +21,7 @@ class _HomePageState extends State<HomePage> {
       style: optionStyle,
     ),
     ProfilePage(),
-    Text(
-      'Index 4: Settings',
-      style: optionStyle,
-    ),
+    AboutPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -59,8 +57,8 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Color(0xFFEB5C6D),
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: Icon(Icons.info),
+            label: 'About',
             backgroundColor: Colors.green,
           ),
         ],
