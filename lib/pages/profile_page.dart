@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/pages/login_page.dart';
 import 'package:flutter_group2_tshirt_project/services/auth_service.dart';
+import 'package:flutter_group2_tshirt_project/services/db_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 enum EditProfile { firstname, lastname }
@@ -23,9 +26,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  AuthService auth = AuthService();
+  DbService db = DbService();
   //Change for the real user's data!!
-  String firstname = "Catherine";
-  String lastname = "Aymon";
+  String firstname = " ";
+  String lastname = " ";
+  User? user = null;
 
   bool firstnameIsReadOnly = true;
   bool lastnameIsReadOnly = true;
@@ -41,20 +47,43 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void firstnameChanged(String value) {
+  void firstnameChanged(String value) async {
     if (value == "") {
       value = " ";
     } else {
+      db.updateUser(user!.uid, value, lastname);
       setState(() => firstname = value);
     }
   }
 
-  void lastnameChanged(String value) {
+  void lastnameChanged(String value) async {
     if (value == "") {
       value = " ";
     } else {
+      db.updateUser(user!.uid, firstname, value);
       setState(() => lastname = value);
     }
+  }
+
+  Future<void> getUserAttirbutes() async {
+    //get current user
+    User? currentUser = await auth.getCurrentUser();
+    if (currentUser != null) {
+      DocumentSnapshot snapshot = await db.getUserById(currentUser.uid);
+      if (snapshot.exists) {
+        setState(() {
+          lastname = snapshot.get("LastName");
+          firstname = snapshot.get("FirstName");
+          user = currentUser;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserAttirbutes();
   }
 
   @override

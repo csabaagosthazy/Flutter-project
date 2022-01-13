@@ -1,9 +1,7 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls
 
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import '../data/activity_data.dart';
@@ -28,6 +26,15 @@ class DbService {
     await users
         .doc(userId)
         .set({"FirstName": firstName, "LastName": lastName, "Sessions": []});
+  }
+
+  ///Get user
+  ///
+  ///userId : signed in user
+  ///
+  ///Returns database transaction result
+  Future<DocumentSnapshot> getUserById(String userId) async {
+    return users.doc(userId).get();
   }
 
   ///Update user
@@ -116,7 +123,8 @@ class DbService {
   ///data: Session data list
   ///
   ///Returns a List of activity data
-  Future<List<ActivityData>> getDataByUser(String userId, [int numberActivity=-1]) async {
+  Future<List<ActivityData>> getDataByUser(String userId,
+      [int numberActivity = -1]) async {
     DateFormat dateFormat = DateFormat('yyyy-MM-dd');
     List<ActivityData> result = [];
     DocumentSnapshot documentSnapshot = await users.doc(userId).get();
@@ -125,14 +133,14 @@ class DbService {
       //get user sessions
       List<dynamic> sessions = documentSnapshot.get("Sessions");
 
-      if(sessions.isEmpty) {
+      if (sessions.isEmpty) {
         return [];
       }
       int numberData = sessions.length;
-      if(numberActivity >= 0 && numberActivity < sessions.length){
+      if (numberActivity >= 0 && numberActivity < sessions.length) {
         numberData = numberActivity;
       }
-      for(var idx=0; idx < numberData; idx++){
+      for (var idx = 0; idx < numberData; idx++) {
         final element = sessions[idx];
         ActivityData currentActivityData;
         String currentSessionDate =
