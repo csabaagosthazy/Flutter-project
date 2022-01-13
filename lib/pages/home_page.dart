@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/pages/calendar_page.dart';
+import 'package:flutter_group2_tshirt_project/pages/about_page.dart';
 import 'package:flutter_group2_tshirt_project/pages/main_page.dart';
+import 'package:flutter_group2_tshirt_project/pages/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,14 +18,8 @@ class _HomePageState extends State<HomePage> {
   static const List<Widget> _widgetOptions = <Widget>[
     MainPage(),
     CalendarPage(),
-    Text(
-      'Index 3: Profile',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 4: Settings',
-      style: optionStyle,
-    ),
+    ProfilePage(),
+    AboutPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -36,8 +32,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Welcome to our App'),
         automaticallyImplyLeading: false,
+        title: const Text('Smart T-shirt App'),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -52,16 +48,16 @@ class _HomePageState extends State<HomePage> {
           const BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today_rounded),
             label: 'Calendar',
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.orange,
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
-            backgroundColor: Colors.orange,
+            backgroundColor: Color(0xFFEB5C6D),
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: Icon(Icons.info),
+            label: 'About',
             backgroundColor: Colors.green,
           ),
         ],
