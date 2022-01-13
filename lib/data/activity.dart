@@ -8,7 +8,7 @@ import 'package:flutter_group2_tshirt_project/components/line_chart.dart';
 import 'package:flutter_group2_tshirt_project/connection/tshirt_connection.dart';
 import 'package:flutter_group2_tshirt_project/data/history_list.dart';
 import 'package:flutter_group2_tshirt_project/data/tshirt_data.dart';
-import 'package:flutter_group2_tshirt_project/db_service.dart';
+import 'package:flutter_group2_tshirt_project/services/db_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -18,7 +18,10 @@ class Activity extends StatefulWidget {
   bool displayHistory;
   late List<TshirtData> history;
 
-  Activity({List<TshirtData>? history,this.displayHistory=false, this.canStart = false}) {
+  Activity(
+      {List<TshirtData>? history,
+      this.displayHistory = false,
+      this.canStart = false}) {
     this.history = history ?? List.empty(growable: true);
     displayHistory = this.canStart;
   }
@@ -142,13 +145,13 @@ class _ActivityState extends State<Activity> {
         seconds.toString();
   }
 
-  void hideStartButton(){
+  void hideStartButton() {
     setState(() {
       widget.canStart = false;
     });
   }
 
-  void displayStartButton(){
+  void displayStartButton() {
     setState(() {
       widget.canStart = true;
     });
@@ -190,8 +193,7 @@ class _ActivityState extends State<Activity> {
           heartFrequencyTitle = history.last.heartFrequency.toString();
           humidityTitle = history.last.humidity.toString();
           temperatureTitle = history.last.temperature.toString();
-          textConnectedTshirt =
-              "Connected!";
+          textConnectedTshirt = "Connected!";
         }
       });
     });
@@ -287,12 +289,13 @@ class _ActivityState extends State<Activity> {
       )));
     }
 
-    return  Column(children: <Widget>[
-    Visibility(
-    visible: widget.canStart,
-        child:Row(children: [
-          Expanded(child: Center(child: Text(textConnectedTshirt)),)
-            ,
+    return Column(children: <Widget>[
+      Visibility(
+          visible: widget.canStart,
+          child: Row(children: [
+            Expanded(
+              child: Center(child: Text(textConnectedTshirt)),
+            ),
             ElevatedButton(
                 onPressed: () {
                   if (isStarted && history.length >= 3) {

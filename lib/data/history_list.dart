@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/components/activity_item.dart';
-import '../db_service.dart';
+import '../services/db_service.dart';
 import 'activity_data.dart';
 
 /// This is the stateful widget that Activity instantiates.
