@@ -8,6 +8,11 @@ import '../validation.dart';
 import 'home_page.dart';
 import 'signup_page.dart';
 
+///
+///This class manage the login page with help of custom textfield "login_field"
+///If the user click in log in, it checks the fields and then retrieve the
+///correct user from the firebase database. The validator of fields is used here.
+///
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -57,19 +62,18 @@ class _LoginPageState extends State<LoginPage> {
   //CHECK password and user
   void checkLoginOfUser() {
     setState(() => _submitted = true);
-    if(_errorEmail != null){
+    if (_errorEmail != null) {
       return;
     }
 
     AuthService auth = AuthService();
 
     //TODO: Login to firebase
-    auth.signIn(controllerEmail.text, controllerPassword.text)
-        .then((user) =>
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const HomePage()),
-        )
-    );
+    auth
+        .signIn(controllerEmail.text, controllerPassword.text)
+        .then((user) => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            ));
   }
 
   @override
@@ -79,7 +83,8 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
     //  controller.dispose();
   }
-  String? get _errorEmail{
+
+  String? get _errorEmail {
     return errorEmail(controllerEmail);
   }
 
@@ -129,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
             isPasswordInvisible: isPasswordInvisible,
             changePasswordVisibility: changePasswordVisibility,
             controller: controllerEmail,
-            errorText: _submitted ?_errorEmail:null,
+            errorText: _submitted ? _errorEmail : null,
           ),
           InputLoginField(
             hintText: "Password",

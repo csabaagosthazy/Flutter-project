@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/components/chart_data.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-
+///
+///This class manage the view of line chart.
+///Shown values and title depend on which info card were clicked.
+///
+///
 class Linechart extends StatefulWidget {
   final String indicator;
   final List<ChartData> data;

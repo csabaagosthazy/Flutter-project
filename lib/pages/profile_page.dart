@@ -5,6 +5,16 @@ import 'package:google_fonts/google_fonts.dart';
 
 enum EditProfile { firstname, lastname }
 
+///
+///This page managed the profile of the user.
+///User can update his/her firstname and surname.
+///New values will be sent to the database.
+///
+///The profile shows circle avatar with first letters of
+///firstname and lastname of the user.
+///
+///The logout button allows to log out from the current account.
+///
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 

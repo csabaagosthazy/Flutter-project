@@ -43,15 +43,16 @@ class _CalendarPageState extends State<CalendarPage> {
     super.initState();
     getActivityByDay(DateTime.now());
   }
+
   /// Hide the calendar
-  void hideCalendar(){
+  void hideCalendar() {
     setState(() {
       isCalendarVisible = false;
     });
   }
 
   /// Display the calendar
-  void showCalendar(){
+  void showCalendar() {
     setState(() {
       isCalendarVisible = true;
     });
@@ -60,68 +61,71 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(children: [Visibility(
-          visible: isCalendarVisible,
-          child:
-      TableCalendar(
-        //init the calendar
-        focusedDay: _focusedDay,
-        firstDay: DateTime(2020),
-        lastDay: DateTime(2030),
+        body: Column(children: [
+      Visibility(
+        visible: isCalendarVisible,
+        child: TableCalendar(
+          //init the calendar
+          focusedDay: _focusedDay,
+          firstDay: DateTime(2020),
+          lastDay: DateTime(2030),
 
-        //Custom calendar
-        startingDayOfWeek: StartingDayOfWeek.monday,
-        daysOfWeekVisible: true,
-        headerStyle: HeaderStyle(
-          formatButtonVisible: false,
-          titleCentered: true,
-        ),
+          //Custom calendar
+          startingDayOfWeek: StartingDayOfWeek.monday,
+          daysOfWeekVisible: true,
+          headerStyle: HeaderStyle(
+            formatButtonVisible: false,
+            titleCentered: true,
+          ),
 
-        //adding interactivity
-        selectedDayPredicate: (day) {
-          return isSameDay(_selectedDay, day);
-        },
-        onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-          if(!isSameDay(selectedDay, _selectedDay)) {
-            getActivityByDay(selectedDay);
-          }
+          //adding interactivity
+          selectedDayPredicate: (day) {
+            return isSameDay(_selectedDay, day);
+          },
+          onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+            if (!isSameDay(selectedDay, _selectedDay)) {
+              getActivityByDay(selectedDay);
+            }
             setState(() {
               _selectedDay = selectedDay;
               _focusedDay = focusedDay;
             });
+          },
+          calendarFormat: _calendarFormat,
+          onFormatChanged: (CalendarFormat _format) {
+            setState(() {
+              _calendarFormat = _format;
+            });
+          },
 
-        },
-        calendarFormat: _calendarFormat,
-        onFormatChanged: (CalendarFormat _format) {
-          setState(() {
-            _calendarFormat = _format;
-          });
-        },
+          //Updating focusedDay
+          onPageChanged: (focusedDay) {
+            _focusedDay = focusedDay;
+          },
 
-        //Updating focusedDay
-        onPageChanged: (focusedDay) {
-          _focusedDay = focusedDay;
-        },
+          //Calendar style
+          calendarStyle: CalendarStyle(
+              isTodayHighlighted: true,
+              selectedDecoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              selectedTextStyle: TextStyle(color: Colors.white),
+              todayDecoration: BoxDecoration(
+                color: Colors.deepPurple.shade300,
+                shape: BoxShape.circle,
+              )),
 
-        //Calendar style
-        calendarStyle: CalendarStyle(
-            isTodayHighlighted: true,
-            selectedDecoration: BoxDecoration(
-              color: Colors.red,
-              shape: BoxShape.circle,
-            ),
-            selectedTextStyle: TextStyle(color: Colors.white),
-            todayDecoration: BoxDecoration(
-              color: Colors.deepPurple.shade300,
-              shape: BoxShape.circle,
-            )),
-
-        //Events
-      ),),
-      Expanded(child:
-        HistoryList(displayRecentActivity: false, historyActivity: dataFromDb, clickActivityButton: hideCalendar, clickCloseButton: showCalendar)
-      )
-     //
+          //Events
+        ),
+      ),
+      Expanded(
+          child: HistoryList(
+              displayRecentActivity: false,
+              historyActivity: dataFromDb,
+              clickActivityButton: hideCalendar,
+              clickCloseButton: showCalendar))
+      //
     ]));
   }
 }

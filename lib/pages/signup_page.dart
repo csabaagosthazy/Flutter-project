@@ -7,6 +7,16 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../validation.dart';
 
+///
+///
+///
+///This class manage the login page with help of custom textfield "login_field"
+///If the user click in log in, it checks the fields and then create an
+///account in firebase. The validator of fields is used here.
+///
+///
+///
+///
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
 

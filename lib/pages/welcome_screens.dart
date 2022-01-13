@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_group2_tshirt_project/pages/home_page.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
+///
+///
+///This page represents management of three welcome screens
+///which are shown to the user for the first time he/she sign in
+///to the application.
+///
+///
+///
+///
 class WelcomeScreens extends StatefulWidget {
   const WelcomeScreens({Key? key}) : super(key: key);
 

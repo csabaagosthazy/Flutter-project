@@ -4,6 +4,12 @@ import 'package:flutter_group2_tshirt_project/pages/about_page.dart';
 import 'package:flutter_group2_tshirt_project/pages/main_page.dart';
 import 'package:flutter_group2_tshirt_project/pages/profile_page.dart';
 
+///
+///This class represents the main frame where other pages will be shown.
+///Depending on which button was clicked on the bottom navigaton bar,
+///it will charge the appropriate page.
+///
+///
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 

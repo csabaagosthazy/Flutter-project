@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+///
+///This class manages about page
+///
+///
 class AboutPage extends StatelessWidget {
   const AboutPage({Key? key}) : super(key: key);
 
