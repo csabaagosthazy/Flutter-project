@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Project Group 2',
-
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),

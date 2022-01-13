@@ -3,7 +3,7 @@ import 'package:flutter_group2_tshirt_project/pages/login_page.dart';
 import 'package:flutter_group2_tshirt_project/services/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-enum EditProfile { firstname, lastname, gender, age }
+enum EditProfile { firstname, lastname }
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -13,17 +13,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  //Change for the real user's data!! If no gender and age, need to change
-  //to the words: Sex and Age, so the user can change it
+  //Change for the real user's data!!
   String firstname = "Catherine";
   String lastname = "Aymon";
-  String gender = "Female";
-  String age = "19";
 
   bool firstnameIsReadOnly = true;
   bool lastnameIsReadOnly = true;
-  bool genderIsReadOnly = true;
-  bool ageIsReadOnly = true;
 
   void editField(EditProfile field) {
     switch (field) {
@@ -32,12 +27,6 @@ class _ProfilePageState extends State<ProfilePage> {
         break;
       case EditProfile.lastname:
         setState(() => lastnameIsReadOnly = !lastnameIsReadOnly);
-        break;
-      case EditProfile.gender:
-        setState(() => genderIsReadOnly = !genderIsReadOnly);
-        break;
-      case EditProfile.age:
-        setState(() => ageIsReadOnly = !ageIsReadOnly);
         break;
     }
   }
@@ -58,22 +47,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void genderChanged(String value) {
-    if (value == "") {
-      value = " ";
-    } else {
-      setState(() => gender = value);
-    }
-  }
-
-  void ageChanged(String value) {
-    if (value == "") {
-      value = " ";
-    } else {
-      setState(() => age = value);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,9 +56,11 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Center(
             child: Column(
               children: <Widget>[
+                const SizedBox(
+                  height: 30.0,
+                ),
                 Text(
                   "Edit Profile",
-                  textAlign: TextAlign.left,
                   style: GoogleFonts.lato(
                       color: Colors.deepPurple,
                       fontWeight: FontWeight.bold,
@@ -98,17 +73,18 @@ class _ProfilePageState extends State<ProfilePage> {
                 CircleAvatar(
                   backgroundColor: Colors.deepPurple[200],
                   child: Text(
-                    firstname.substring(0, 1) + lastname.substring(0, 1),
+                    firstname.substring(0, 1).toUpperCase() +
+                        lastname.substring(0, 1).toUpperCase(),
                     style: GoogleFonts.lato(
                         color: Colors.deepPurple,
                         fontWeight: FontWeight.bold,
                         fontSize: 42,
                         letterSpacing: 2),
                   ),
-                  maxRadius: 60,
+                  maxRadius: 80,
                 ),
                 const SizedBox(
-                  height: 20.0,
+                  height: 30.0,
                 ),
                 TextField(
                   autofocus: true,
@@ -149,47 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   onChanged: lastnameChanged,
                 ),
                 const SizedBox(
-                  height: 8.0,
-                ),
-                TextField(
-                  readOnly: genderIsReadOnly,
-                  decoration: InputDecoration(
-                      hintText: gender,
-                      labelText: "Gender",
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      prefixIcon: const Icon(Icons.people_alt_outlined),
-                      suffixIcon: IconButton(
-                        icon: genderIsReadOnly
-                            ? const Icon(Icons.edit)
-                            : const Icon(Icons.check),
-                        splashColor: Colors.cyan,
-                        onPressed: () => editField(EditProfile.gender),
-                      )),
-                  keyboardType: TextInputType.text,
-                  onChanged: genderChanged,
-                ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                TextField(
-                  readOnly: ageIsReadOnly,
-                  decoration: InputDecoration(
-                      hintText: age,
-                      labelText: "Age",
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      prefixIcon: const Icon(Icons.cake),
-                      suffixIcon: IconButton(
-                        icon: ageIsReadOnly
-                            ? const Icon(Icons.edit)
-                            : const Icon(Icons.check),
-                        splashColor: Colors.cyan,
-                        onPressed: () => editField(EditProfile.age),
-                      )),
-                  keyboardType: TextInputType.number,
-                  onChanged: ageChanged,
-                ),
-                const SizedBox(
-                  height: 40,
+                  height: 100,
                 ),
                 ElevatedButton(
                     onPressed: () {
@@ -212,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: TextButton.styleFrom(
                         backgroundColor: Colors.red,
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 50),
+                            vertical: 10.0, horizontal: 40),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0)))),
               ],
