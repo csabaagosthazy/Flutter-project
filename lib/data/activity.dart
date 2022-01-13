@@ -305,48 +305,50 @@ class _ActivityState extends State<Activity> {
     return Column(children: <Widget>[
       Visibility(
           visible: widget.canStart,
-          child: Row(children: [
-            Expanded(
-              child: Center(child: Text(textConnectedTshirt)),
-            ),
-            ElevatedButton(
-                onPressed: () async {
-                  if (isStarted && history.length >= 3) {
-                    DbService db = DbService();
-                    AuthService auth = AuthService();
-                    var user = await auth.getCurrentUser();
-                    if (user != null) {
-                      db.saveSession(user.uid, history);
-                    }
-                    stopActivity();
-                  } else {
-                    startActivity();
-                  }
-                },
-                style: TextButton.styleFrom(
-                    backgroundColor: isStarted ? Colors.red : Colors.green,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 40),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0))),
-                child: Text(
-                  isStarted ? "Stop activity" : "Start Activity",
-                  style: GoogleFonts.heebo(
-                    color: Colors.white,
-                    letterSpacing: 0.5,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )),
-            const SizedBox(
-              height: 10,
-            ),
-
-            /*
-                child: isStarted
-                    ? const Text("Stop activity")
-                    : const Text("Start activity")),*/
-          ])),
+          child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Row(children: [
+                Expanded(
+                  child: Center(
+                      child: Text(textConnectedTshirt,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.sora(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ))),
+                ),
+                ElevatedButton(
+                    onPressed: () async {
+                      if (isStarted && history.length >= 3) {
+                        DbService db = DbService();
+                        AuthService auth = AuthService();
+                        var user = await auth.getCurrentUser();
+                        if (user != null) {
+                          db.saveSession(user.uid, history);
+                        }
+                        stopActivity();
+                      } else {
+                        startActivity();
+                      }
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: isStarted ? Colors.red : Colors.green,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 20),
+                    ),
+                    child: Text(
+                      isStarted ? "Stop activity" : "Start Activity",
+                      style: GoogleFonts.heebo(
+                        color: Colors.white,
+                        letterSpacing: 0.5,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                const SizedBox(
+                  height: 30,
+                ),
+              ]))),
       ...underButton
     ]);
   }

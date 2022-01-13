@@ -37,7 +37,7 @@ class _HistoryListState extends State<HistoryList> {
     DbService db = DbService();
     AuthService auth = AuthService();
     User? user = await auth.getCurrentUser();
-    if(user == null){
+    if (user == null) {
       return [];
     }
 
@@ -118,21 +118,29 @@ class _HistoryListState extends State<HistoryList> {
     } else {
       //Display only the last 5 activities
       List<Widget> items = List.empty(growable: true);
-      items.add(const Center(child: Text("List of activities: ", style: TextStyle(fontSize: 20,),)),);
+      items.add(
+        const Padding(
+            padding: EdgeInsets.all(20),
+            child: Text(
+              "List of activities: ",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            )),
+      );
       for (var i = 0; i < historyActivity!.length; i++) {
-
         items.add(ActivityItem(
           data: historyActivity![historyActivity!.length - 1 - i],
           onClick: displayLastActivity,
         ));
       }
       // design = Container(child: Column(children: items));
-      design = ListView.builder  (
+      design = ListView.builder(
           itemCount: items.length,
           itemBuilder: (BuildContext ctxt, int index) {
             return items[index];
-          }
-      );
+          });
     }
     return design;
   }
